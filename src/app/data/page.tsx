@@ -1,19 +1,13 @@
 import type { Metadata } from 'next'
 import { ReactNode } from 'react'
 import { PageHead, Section, Shell } from '@/components/Page'
+import { MEASURED_LABEL, MEASURED_ON, SOURCES, SYNC_SCHEDULE, formatCount } from '@/content/figures'
 
 export const metadata: Metadata = {
   title: '데이터',
   description:
     '어디서 받아 오는지, 무엇을 알 수 있고 무엇을 알 수 없는지. 비어 있는 지역과 못 채운 값을 그대로 적었습니다.',
 }
-
-const SOURCES = [
-  { name: '보육통합정보시스템', gets: '어린이집', count: '8,331곳', format: 'XML' },
-  { name: '유치원알리미', gets: '유치원', count: '7,052곳', format: 'JSON' },
-  { name: '건강보험심사평가원', gets: '소아청소년과', count: '4,292곳', format: 'XML' },
-  { name: '보조금24', gets: '정부지원 서비스', count: '60건', format: 'JSON' },
-]
 
 /** 이 표가 이 페이지의 이유다. 마케팅 페이지가 보통 쓰지 않는 오른쪽 칸. */
 const LEDGER = [
@@ -54,10 +48,10 @@ export default function DataPage(): ReactNode {
         }
       />
 
-      <Section label="출처" title="네 곳에서 받아 옵니다">
+      <Section label={`출처 · ${MEASURED_LABEL}`} title="네 곳에서 받아 옵니다">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[560px] border-collapse text-left">
-            <caption className="sr-only">공공데이터 출처별 수집 현황</caption>
+            <caption className="sr-only">공공데이터 출처별 수집 현황 ({MEASURED_LABEL})</caption>
             <thead>
               <tr className="border-b" style={{ borderColor: 'var(--ink)' }}>
                 <th scope="col" className="label pb-3">
@@ -67,7 +61,7 @@ export default function DataPage(): ReactNode {
                   대상
                 </th>
                 <th scope="col" className="label pb-3 text-right">
-                  수집량
+                  수집량 · {MEASURED_ON}
                 </th>
                 <th scope="col" className="label pb-3 text-right">
                   형식
@@ -83,7 +77,10 @@ export default function DataPage(): ReactNode {
                   <td className="py-4 pr-4 text-[0.95rem]" style={{ color: 'var(--ink-soft)' }}>
                     {s.gets}
                   </td>
-                  <td className="figure py-4 pr-4 text-right text-[0.95rem]">{s.count}</td>
+                  <td className="figure py-4 pr-4 text-right text-[0.95rem]">
+                    {formatCount(s.count)}
+                    {s.unit}
+                  </td>
                   <td
                     className="figure py-4 text-right text-[0.8125rem]"
                     style={{ color: 'var(--past)' }}
@@ -103,6 +100,12 @@ export default function DataPage(): ReactNode {
           네 곳 모두 응답 형식과 지역 코드 체계가 다릅니다. 시군구를 하나씩 돌면서 모으고, 한 곳이
           실패해도 나머지는 계속 받습니다. 수집이 아예 멈추거나 호출 한도를 넘기면 사람에게
           알립니다.
+        </p>
+
+        {/* 이 사이트는 근거 없는 숫자를 쓰지 않겠다고 말한다. 그러면 언제 잰 값인지도 말해야 한다. */}
+        <p className="mt-3 max-w-2xl text-[0.9rem] leading-[1.85]" style={{ color: 'var(--past)' }}>
+          위 수집량은 {MEASURED_LABEL} 실측값입니다. 매주 새로 받아 오므로 지금 수치와 다를 수
+          있습니다.
         </p>
       </Section>
 
@@ -163,12 +166,7 @@ export default function DataPage(): ReactNode {
           <table className="w-full min-w-[440px] border-collapse text-left">
             <caption className="sr-only">데이터 갱신 주기</caption>
             <tbody>
-              {[
-                ['어린이집 · 유치원', '주 1회'],
-                ['소아청소년과', '주 1회'],
-                ['정부지원 서비스', '매일'],
-                ['주소 좌표 보정', '매일'],
-              ].map(([what, when]) => (
+              {SYNC_SCHEDULE.map(({ what, when }) => (
                 <tr key={what} className="border-b" style={{ borderColor: 'var(--rule)' }}>
                   <th scope="row" className="py-4 pr-6 text-[0.95rem] font-normal">
                     {what}

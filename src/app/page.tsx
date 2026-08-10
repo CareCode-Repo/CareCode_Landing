@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ReactNode } from 'react'
 import MonthTimeline from '@/components/MonthTimeline'
+import { MEASURED_LABEL, SOURCES, formatCount } from '@/content/figures'
 import { Figure, Section, Shell } from '@/components/Page'
 
 export default function Home(): ReactNode {
@@ -96,12 +97,17 @@ export default function Home(): ReactNode {
         </div>
       </Section>
 
-      <Section label="모아 둔 것" title="네 곳의 정부 데이터를 한 자리에">
+      <Section label={`모아 둔 것 · ${MEASURED_LABEL}`} title="네 곳의 정부 데이터를 한 자리에">
         <div className="grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-          <Figure value="8,331" unit="곳" label="어린이집" note="보육통합정보시스템" />
-          <Figure value="7,052" unit="곳" label="유치원" note="유치원알리미" />
-          <Figure value="4,292" unit="곳" label="소아청소년과" note="건강보험심사평가원" />
-          <Figure value="60" unit="건" label="정부지원 서비스" note="보조금24" />
+          {SOURCES.map((source) => (
+            <Figure
+              key={source.name}
+              value={formatCount(source.count)}
+              unit={source.unit}
+              label={source.gets}
+              note={source.name}
+            />
+          ))}
         </div>
         <p
           className="mt-8 max-w-2xl text-[0.9rem] leading-[1.85]"

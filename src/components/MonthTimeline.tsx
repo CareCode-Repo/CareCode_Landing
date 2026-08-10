@@ -1,6 +1,7 @@
 'use client'
 
 import { ReactNode, useMemo, useState } from 'react'
+import { AXIS_MAX_MONTHS as AXIS_MAX, BENEFIT_BANDS, formatCount as won } from '@/content/figures'
 
 /**
  * 월령 타임라인.
@@ -10,36 +11,14 @@ import { ReactNode, useMemo, useState } from 'react'
  *
  * 밴드 구성은 실제 정책 데이터 모델(targetAgeMin/Max, benefitAmount, retroactiveMonths)을
  * 그대로 따른다. 금액을 모르는 정책이 실재하므로 '미상' 도 한 줄 넣었다.
+ * 값은 낡기 때문에 기준일과 함께 @/content/figures 에 모아 둔다.
  */
-
-const AXIS_MAX = 72
-
-type Band = {
-  name: string
-  from: number
-  to: number
-  /** 월 지급액(원). 공공데이터가 숫자를 주지 않는 정책은 null. */
-  monthly: number | null
-  /** 대상 기간이 지난 뒤에도 소급 신청이 가능한 개월 수. */
-  retroactive: number
-}
-
-const BANDS: Band[] = [
-  { name: '부모급여', from: 0, to: 23, monthly: 700_000, retroactive: 6 },
-  { name: '아동수당', from: 0, to: 95, monthly: 100_000, retroactive: 0 },
-  { name: '양육수당', from: 24, to: 86, monthly: 100_000, retroactive: 6 },
-  { name: '첫만남이용권', from: 0, to: 11, monthly: null, retroactive: 12 },
-  { name: '보육료 지원', from: 0, to: 71, monthly: 280_000, retroactive: 0 },
-]
-
-const won = (n: number): string => n.toLocaleString('ko-KR')
-
 export default function MonthTimeline(): ReactNode {
   const [months, setMonths] = useState(27)
 
   const rows = useMemo(
     () =>
-      BANDS.map((band) => {
+      BENEFIT_BANDS.map((band) => {
         const active = months >= band.from && months <= band.to
         const passed = months > band.to
         const claimable = passed && months - band.to <= band.retroactive
