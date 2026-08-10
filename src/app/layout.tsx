@@ -3,6 +3,7 @@ import { IBM_Plex_Mono } from 'next/font/google'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 import SiteNav from '@/components/SiteNav'
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL } from '@/content/site'
 import { Shell } from '@/components/Page'
 import '@/styles/globals.css'
 
@@ -15,18 +16,26 @@ const plexMono = IBM_Plex_Mono({
 })
 
 export const metadata: Metadata = {
+  // sitemap·OG 가 절대 URL 을 요구한다. 페이지마다 다시 쓰지 않도록 여기서 기준을 잡는다.
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: '맘편한 — 놓치는 육아 지원을 줄입니다',
-    template: '%s · 맘편한',
+    default: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    template: `%s · ${SITE_NAME}`,
   },
-  description:
-    '받을 수 있는 지원금, 자리가 난 어린이집, 마감이 다가온 신청. 정부 공공데이터를 모아 부모에게 필요한 형태로 알려 드립니다.',
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: '/' },
   openGraph: {
-    title: '맘편한 — 놓치는 육아 지원을 줄입니다',
-    description:
-      '받을 수 있는 지원금, 자리가 난 어린이집, 마감이 다가온 신청. 아이 개월 수마다 무엇이 열리고 닫히는지 보여 드립니다.',
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
     locale: 'ko_KR',
     type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${SITE_NAME} — ${SITE_TAGLINE}`,
+    description: SITE_DESCRIPTION,
   },
 }
 
