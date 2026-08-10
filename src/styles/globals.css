@@ -1,0 +1,151 @@
+@import 'tailwindcss';
+
+/*
+ * 방향: 육아수첩 · 관공서 기록부.
+ *
+ * 파스텔 베이비 톤(이 분야의 클리셰)도, 핀테크식 무채색도 아니다.
+ * 정부가 나눠 주는 아기수첩 — 모눈 인쇄, 개월 수 탭, 도장, 표 — 을 기준으로 삼는다.
+ */
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('../assets/fonts/PretendardVariable.woff2') format('woff2');
+}
+
+:root {
+  /* 재생지에 가까운 차가운 오프화이트. 흔한 크림색(#F4F1EA)을 피한다. */
+  --paper: #f6f8f3;
+  --paper-deep: #eef2e9;
+  /* 도장 잉크에 가까운 진한 녹흑. 순수 검정은 인쇄물처럼 보이지 않는다. */
+  --ink: #1c2620;
+  --ink-soft: #4a564d;
+  /* 유효·현재. 앱과 같은 브랜드 그린을 쓴다. */
+  --seal: #36aa1c;
+  --seal-deep: #23791a;
+  /* 이미 지나간 것 */
+  --past: #a8b2a5;
+  /* 마감·경고. 경보 빨강이 아니라 도장 빨강. */
+  --stamp: #c2453d;
+  /* 모눈선 */
+  --rule: #dce3d6;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-seal: var(--seal);
+  --font-sans: 'Pretendard', system-ui, sans-serif;
+}
+
+html {
+  background-color: var(--paper);
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: 'Pretendard', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 모눈 종이. 아주 옅게 깔려 배경이 종이라는 것만 알린다. */
+.paper-grid {
+  background-image:
+    linear-gradient(to right, var(--rule) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
+  background-size: 28px 28px;
+  background-position: -1px -1px;
+}
+
+/*
+ * 표제. 굵게 외치는 대신 얇게 크게 놓는다.
+ *
+ * 이 서비스의 목소리는 "다 받으세요" 가 아니라 "이건 알고 이건 모릅니다" 라서,
+ * 700 짜리 고딕 헤드라인은 성격에 맞지 않는다. 한글 명조를 외부에서 받아 오는 방법도 있지만
+ * 개인정보 고지를 두는 서비스가 방문자 IP 를 매번 외부로 보낼 수는 없어, 자체 호스팅한
+ * Pretendard 의 굵기·크기·자간 대비로 목소리를 만든다.
+ */
+.display {
+  font-weight: 300;
+  letter-spacing: -0.035em;
+  line-height: 1.26;
+}
+
+/* 금액·개월·수치. 자릿수가 흔들리지 않아야 표와 축이 읽힌다. */
+.figure {
+  font-family: var(--font-figure), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* 수첩의 항목 라벨. 인쇄된 안내문처럼 작고 조금 벌려 놓는다. */
+.label {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+}
+
+/* 값을 모를 때의 표기. 이 서비스에서 '미상'은 일급 상태다. */
+.unknown {
+  font-family: var(--font-figure), ui-monospace, monospace;
+  color: var(--past);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 0.25em;
+}
+
+/* 도장. 종이 위에 찍힌 것처럼 살짝 기울인다. */
+.stamp {
+  font-family: var(--font-figure), ui-monospace, monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  border: 1.5px solid currentColor;
+  border-radius: 2px;
+  padding: 0.2rem 0.45rem;
+  transform: rotate(-3deg);
+  display: inline-block;
+}
+
+/* 앵커나 건너뛰기 링크로 이동할 때 제목이 상단 고정 메뉴에 가리지 않게 한다. */
+h1,
+h2,
+h3,
+[id] {
+  scroll-margin-top: 5.5rem;
+}
+
+:focus-visible {
+  outline: 2px solid var(--seal);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* 스크롤 등장. 한 번만, 조용히. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.rise {
+  animation: rise 0.5s cubic-bezier(0.22, 0.8, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
