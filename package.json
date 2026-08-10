@@ -1,0 +1,31 @@
+{
+  "name": "carecode-landing",
+  "version": "0.1.0",
+  "private": true,
+  "description": "맘편한(CareCode) 서비스 소개 사이트",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "15.3.5",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1.4.1",
+    "@eslint/eslintrc": "^3.3.6",
+    "@eslint/js": "^10.0.1",
+    "@tailwindcss/postcss": "^4.1.11",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^15.3.5",
+    "tailwindcss": "^4.1.11",
+    "typescript": "^5"
+  }
+}
