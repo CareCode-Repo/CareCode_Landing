@@ -80,11 +80,21 @@ jobs:
           done
 
           # 스타일이 붙었는지까지 봐야 의미가 있다. basePath 가 어긋나면 여기서 걸린다.
-          css=$(curl -sS "$base/" | grep -oE '/[^"]*\.css' | head -1)
+          #
+          # href 는 "/CareCode_Landing/_next/..." 처럼 basePath 를 이미 포함한 루트 절대경로다.
+          # base 에 그대로 붙이면 basePath 가 두 번 들어가 멀쩡한 사이트도 404 로 보인다.
+          # 검사가 오탐을 내면 사람이 검사를 무시하게 되므로 도메인 원점에 붙인다.
+          origin=$(printf '%s' "$base" | sed -E 's#^(https?://[^/]+).*#\1#')
+          css=$(curl -sS "$base/" | grep -oE 'href="[^"]+\.css"' | head -1 | sed -E 's/href="([^"]+)"/\1/')
           if [ -n "$css" ]; then
-            code=$(curl -sS -o /dev/null -w '%{http_code}' "$base$css")
+            case "$css" in
+              http*) css_url="$css" ;;
+              /*)    css_url="$origin$css" ;;
+              *)     css_url="$base/$css" ;;
+            esac
+            code=$(curl -sS -o /dev/null -w '%{http_code}' "$css_url")
             printf '  %-16s %s\n' "css" "$code"
-            [ "$code" = "200" ] || fail=1
+            [ "$code" = "200" ] || { echo "    $css_url"; fail=1; }
           else
             echo "  css 링크를 찾지 못했습니다"
             fail=1
