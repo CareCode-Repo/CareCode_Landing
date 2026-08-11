@@ -1,0 +1,38 @@
+name: CI
+
+# PR 에서는 배포하지 않고 검증만 한다. 깨진 채로 main 에 들어가지 않게 하는 것이 목적이다.
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    name: 빌드 · 타입 · 린트 · 화면 검증
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: 의존성 설치
+        run: npm ci
+
+      - name: 타입 검사
+        run: npm run typecheck
+
+      - name: 린트
+        run: npx eslint src scripts
+
+      - name: 빌드
+        run: npm run build
+
+      # 이전에 손으로 잡던 것들이다. /data 표가 그리드 칸을 밀어 가로로 넘쳤고,
+      # 표에 caption 이 없어 스크린리더가 무슨 표인지 알려 주지 못했다.
+      - name: 화면 검증 (반응형 · 접근성)
+        run: |
+          npx serve out -p 4173 -L &
+          npx wait-on http://localhost:4173 --timeout 60000
+          node scripts/verify-pages.mjs http://localhost:4173

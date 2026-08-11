@@ -1,0 +1,93 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  # 사이트에 적힌 수집량은 백엔드가 매주 새로 받아 온다. 다시 빌드해야 반영된다.
+  schedule:
+    - cron: '0 20 * * 1' # 매주 화요일 05:00 KST (어린이집·유치원 동기화 이후)
+  workflow_dispatch:
+
+# 배포는 한 번에 하나만. 뒤에 들어온 것이 이기게 두면 낡은 빌드가 최종본이 될 수 있다.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    name: 정적 파일 생성
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: 의존성 설치
+        run: npm ci
+
+      - uses: actions/configure-pages@v5
+        id: pages
+
+      - name: 빌드
+        # 프로젝트 페이지는 /<저장소명> 아래에 붙는다. basePath 가 없으면 CSS·JS 가 전부 404 다.
+        env:
+          NEXT_PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          NEXT_PUBLIC_SITE_URL: ${{ steps.pages.outputs.base_url }}
+        run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    name: Pages 배포
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/deploy-pages@v4
+        id: deployment
+
+  smoke:
+    name: 배포 후 확인
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 배포가 성공했다는 것과 사이트가 실제로 뜬다는 것은 다르다.
+      # 파일이 올라갔는데 basePath 가 어긋나 CSS 가 404 인 경우가 대표적이다.
+      - name: 페이지 응답 확인
+        env:
+          SITE: ${{ needs.deploy.outputs.page_url || format('https://{0}.github.io/{1}/', github.repository_owner, github.event.repository.name) }}
+        run: |
+          base="${SITE%/}"
+          fail=0
+          for path in "/" "/benefits/" "/facilities/" "/data/" "/trust/" "/sitemap.xml" "/robots.txt"; do
+            code=$(curl -sS -o /dev/null -w '%{http_code}' --retry 5 --retry-delay 5 --retry-all-errors "$base$path")
+            printf '  %-16s %s\n' "$path" "$code"
+            [ "$code" = "200" ] || fail=1
+          done
+
+          # 스타일이 붙었는지까지 봐야 의미가 있다. basePath 가 어긋나면 여기서 걸린다.
+          css=$(curl -sS "$base/" | grep -oE '/[^"]*\.css' | head -1)
+          if [ -n "$css" ]; then
+            code=$(curl -sS -o /dev/null -w '%{http_code}' "$base$css")
+            printf '  %-16s %s\n' "css" "$code"
+            [ "$code" = "200" ] || fail=1
+          else
+            echo "  css 링크를 찾지 못했습니다"
+            fail=1
+          fi
+
+          exit $fail
