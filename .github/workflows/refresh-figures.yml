@@ -1,0 +1,57 @@
+name: Refresh figures
+
+# 사이트에 적힌 수집량은 백엔드가 매주 공공데이터를 새로 받아 오면 낡는다.
+# 사람이 직접 고치는 절차를 없애기 위해 주기적으로 받아 와 PR 을 연다.
+on:
+  schedule:
+    - cron: '0 21 * * 1' # 매주 화요일 06:00 KST (백엔드 시설 동기화 이후)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    name: 수치 갱신 PR
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 백엔드가 공개되기 전에는 조용히 건너뛴다. 실패로 울리면 알림이 무의미해진다.
+      - name: 백엔드 주소 확인
+        id: guard
+        run: |
+          if [ -z "${{ vars.STATS_API_BASE }}" ]; then
+            echo "STATS_API_BASE 변수가 없어 건너뜁니다."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 수치 받아 오기
+        if: steps.guard.outputs.skip == 'false'
+        env:
+          STATS_API_BASE: ${{ vars.STATS_API_BASE }}
+        # 넷 중 하나라도 못 받으면 스크립트가 파일을 손대지 않고 실패한다.
+        # 일부만 갱신하고 날짜를 새로 찍으면 낡은 값에 새 날짜가 붙어 거짓말이 된다.
+        run: node scripts/refresh-figures.mjs
+
+      - name: 변경분 PR 생성
+        if: steps.guard.outputs.skip == 'false'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: chore/refresh-figures
+          title: 'chore(content): 수집량 갱신'
+          commit-message: 'chore(content): 수집량과 기준일 갱신'
+          body: |
+            백엔드 공개 통계에서 받아 온 값입니다. 값과 `MEASURED_ON` 이 함께 바뀝니다.
+
+            사람이 확인할 것은 하나입니다 — **숫자가 갑자기 크게 줄지 않았는지.**
+            공공데이터 수집이 부분 실패하면 값이 뚝 떨어질 수 있고, 그대로 올리면
+            사이트가 실제보다 적은 수를 보여 줍니다.
+          delete-branch: true

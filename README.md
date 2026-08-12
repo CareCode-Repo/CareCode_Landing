@@ -80,12 +80,26 @@ npm run verify   # 로컬에서 같은 검사 (out/ 을 먼저 서빙해야 합�
 사이트에 적힌 수집량은 `src/content/figures.ts` 한 곳에 있고 `MEASURED_ON` 과 함께 둡니다.
 백엔드가 매주 공공데이터를 새로 받아 오므로 값이 낡습니다.
 
-1. `CareCode_Interface` 에서 `./gradlew liveSyncCheck` 로 실측
-2. `figures.ts` 의 값과 `MEASURED_ON` 을 **함께** 수정
-3. `main` 에 반영하면 자동 배포
+**자동**으로 매주 화요일 새벽에 백엔드 공개 통계에서 받아 와 PR 을 엽니다.
 
-값만 고치고 날짜를 안 고치면 거짓말이 됩니다. 매주 화요일 새벽에도 자동으로 다시 빌드하지만,
-그건 코드에 적힌 값을 다시 그리는 것일 뿐 실측값을 새로 받아 오지는 않습니다.
+| 값 | 출처 |
+|---|---|
+| 어린이집 · 유치원 | `GET /facilities/statistics` 의 `typeDistribution` |
+| 소아청소년과 | `GET /health/hospitals/statistics` |
+| 정부지원 서비스 | `GET /policies/statistics` |
+
+넷 중 **하나라도 못 받으면 아무것도 바꾸지 않습니다.** 일부만 갱신하고 날짜를 새로 찍으면
+낡은 값에 새 날짜가 붙어 거짓말이 됩니다.
+
+동작하려면 저장소 변수 `STATS_API_BASE` 에 백엔드 공개 주소가 있어야 합니다. 없으면 워크플로가
+조용히 건너뜁니다 — 백엔드가 공개되기 전에 실패로 울리면 알림이 무의미해지기 때문입니다.
+
+```bash
+STATS_API_BASE=https://api.example.com npm run refresh   # 로컬에서 직접
+```
+
+PR 에서 사람이 볼 것은 하나입니다 — **숫자가 갑자기 크게 줄지 않았는지.** 공공데이터 수집이
+부분 실패하면 값이 뚝 떨어질 수 있습니다.
 
 ## 원칙
 
