@@ -156,14 +156,26 @@ export default function GrowScene(): ReactNode {
     /* ── 동네 장면 — 동적 import ────────────────────────────
        쓰지 않을 것이 확실하면 아예 받지 않는다. three.js 청크를 받아 파싱한 뒤에
        확인하면, 동작 줄이기를 켠 사용자에게는 통째로 버리는 다운로드가 된다. */
-    const wantsMotion = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const canWebGL2 = (() => {
+    /* ?town=force 는 개발용 손잡이다. 소프트웨어 렌더러에서도 장면을 띄워 프레이밍을 확인한다 */
+    const forced = new URLSearchParams(window.location.search).get('town') === 'force'
+    const wantsMotion = forced || !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    /* WebGL2 가 "있다"와 "쓸 만하다"는 다르다. GPU 가속이 없으면 브라우저가 CPU 로 흉내 내는
+       렌더러(SwiftShader · llvmpipe)를 쓰는데, 이 장면은 거기서 초당 몇 프레임이고 메인 스레드를
+       잡아먹어 스크롤까지 끊긴다. 그럴 바에는 정적 배경이 낫다. */
+    const gpu = (() => {
       try {
-        return !!(window.WebGL2RenderingContext && document.createElement('canvas').getContext('webgl2'))
+        const gl = window.WebGL2RenderingContext ? document.createElement('canvas').getContext('webgl2') : null
+        if (!gl) return 'none'
+        const info = gl.getExtension('WEBGL_debug_renderer_info')
+        const name = info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : ''
+        gl.getExtension('WEBGL_lose_context')?.loseContext()
+        return /swiftshader|llvmpipe|softpipe|software|basic render/i.test(name) ? 'software' : 'ok'
       } catch {
-        return false
+        return 'none'
       }
     })()
+    const usable = gpu === 'ok' || (forced && gpu === 'software')
 
     const showFallback = (reason: string) => {
       const fb = sky.querySelector<HTMLElement>('[data-fallback]')
@@ -171,16 +183,18 @@ export default function GrowScene(): ReactNode {
       sky.setAttribute('data-fallback-reason', reason)
     }
 
-    if (!wantsMotion || !canWebGL2) {
-      showFallback(wantsMotion ? 'no-webgl2' : 'reduced-motion')
+    if (!wantsMotion || !usable) {
+      const reason = !wantsMotion ? 'reduced-motion' : gpu === 'software' ? 'software-renderer' : 'no-webgl2'
+      showFallback(reason)
       if (process.env.NODE_ENV !== 'production') {
-        console.info(
-          '[맘편한] 3D 동네를 건너뛰고 정적 배경을 씁니다 — ' +
-            (wantsMotion
-              ? '이 브라우저에서 WebGL2 를 쓸 수 없습니다. chrome://gpu 를 확인하세요.'
-              : '브라우저가 prefers-reduced-motion: reduce 를 보고합니다. ' +
-                'Windows: 설정 > 접근성 > 시각 효과 > 애니메이션 효과 / macOS: 손쉬운 사용 > 디스플레이 > 동작 줄이기'),
-        )
+        const why: Record<string, string> = {
+          'reduced-motion':
+            '브라우저가 prefers-reduced-motion: reduce 를 보고합니다. ' +
+            'Windows: 설정 > 접근성 > 시각 효과 > 애니메이션 효과 / macOS: 손쉬운 사용 > 디스플레이 > 동작 줄이기',
+          'software-renderer': 'GPU 가속 없이 소프트웨어 렌더러로 돌고 있습니다. 확인만 하려면 ?town=force',
+          'no-webgl2': '이 브라우저에서 WebGL2 를 쓸 수 없습니다. chrome://gpu 를 확인하세요.',
+        }
+        console.info(`[맘편한] 3D 동네를 건너뛰고 정적 배경을 씁니다 — ${why[reason]}`)
       }
     } else {
       ;(async () => {
