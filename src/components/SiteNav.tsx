@@ -3,8 +3,9 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ReactNode, useState } from 'react'
+import Logo from '@/components/Logo'
 
-/** 수첩의 탭. 순서가 아니라 분류라서 번호를 붙이지 않는다. */
+/** 순서가 아니라 분류라서 번호를 붙이지 않는다. */
 const TABS = [
   { href: '/', label: '개요' },
   { href: '/benefits', label: '지원금' },
@@ -24,17 +25,14 @@ export default function IntroNav(): ReactNode {
     <header
       className="sticky top-0 z-40 border-b"
       style={{
-        borderColor: 'var(--rule)',
-        backgroundColor: 'rgba(246,248,243,0.92)',
+        borderColor: 'var(--line)',
+        backgroundColor: 'rgba(255,255,255,0.9)',
         backdropFilter: 'blur(8px)',
       }}
     >
       <div className="mx-auto flex max-w-[1180px] items-center justify-between px-5 py-3.5 md:px-8">
-        <Link href="/" className="flex items-baseline gap-2.5">
-          <span className="display text-[1.35rem]" style={{ color: 'var(--ink)' }}>
-            맘편한
-          </span>
-          <span className="label hidden sm:inline">CARECODE</span>
+        <Link href="/" aria-label="맘편한 홈">
+          <Logo />
         </Link>
 
         <nav aria-label="사이트 메뉴" className="hidden md:block">
@@ -44,16 +42,14 @@ export default function IntroNav(): ReactNode {
                 <Link
                   href={tab.href}
                   aria-current={isActive(tab.href) ? 'page' : undefined}
-                  className="relative block px-3.5 py-2 text-[0.9rem] transition-colors"
-                  style={{ color: isActive(tab.href) ? 'var(--ink)' : 'var(--ink-soft)' }}
+                  className="block rounded-full px-4 py-2 text-[0.9375rem] transition-colors hover:bg-[var(--surface)]"
+                  style={
+                    isActive(tab.href)
+                      ? { color: 'var(--brand-deep)', backgroundColor: 'var(--brand-tint)', fontWeight: 600 }
+                      : { color: 'var(--fg-soft)' }
+                  }
                 >
                   {tab.label}
-                  {isActive(tab.href) && (
-                    <span
-                      className="absolute inset-x-3 -bottom-[1px] h-[2px]"
-                      style={{ backgroundColor: 'var(--seal)' }}
-                    />
-                  )}
                 </Link>
               </li>
             ))}
@@ -66,7 +62,7 @@ export default function IntroNav(): ReactNode {
           aria-expanded={open}
           aria-controls="site-menu"
           className="md:hidden"
-          style={{ color: 'var(--ink-soft)' }}
+          style={{ color: 'var(--fg-soft)' }}
         >
           <span className="label">{open ? '닫기' : '메뉴'}</span>
         </button>
@@ -77,7 +73,7 @@ export default function IntroNav(): ReactNode {
           id="site-menu"
           aria-label="사이트 메뉴"
           className="border-t md:hidden"
-          style={{ borderColor: 'var(--rule)' }}
+          style={{ borderColor: 'var(--line)' }}
         >
           <ul className="mx-auto max-w-[1180px] px-5 py-2">
             {TABS.map((tab) => (
@@ -88,8 +84,8 @@ export default function IntroNav(): ReactNode {
                   aria-current={isActive(tab.href) ? 'page' : undefined}
                   className="block border-b py-3 text-[0.95rem] last:border-b-0"
                   style={{
-                    borderColor: 'var(--rule)',
-                    color: isActive(tab.href) ? 'var(--seal-deep)' : 'var(--ink-soft)',
+                    borderColor: 'var(--line)',
+                    color: isActive(tab.href) ? 'var(--brand-deep)' : 'var(--fg-soft)',
                   }}
                 >
                   {tab.label}

@@ -6,9 +6,8 @@ export function Shell({ children }: { children: ReactNode }): ReactNode {
 }
 
 /**
- * 페이지 머리. 수첩의 속표지에 해당한다.
- *
- * eyebrow 는 장식이 아니라 이 페이지가 수첩의 어느 항목인지 알려 준다.
+ * 페이지 머리. eyebrow 는 장식이 아니라 이 페이지가 서비스의 어느 기능인지 알려 준다 —
+ * 앱의 탭 이름과 같은 말을 배지로 단다.
  */
 export function PageHead({
   eyebrow,
@@ -20,17 +19,13 @@ export function PageHead({
   lead: ReactNode
 }): ReactNode {
   return (
-    <header
-      className="border-b pt-14 pb-12 md:pt-20 md:pb-16"
-      style={{ borderColor: 'var(--rule)' }}
-    >
+    <header className="pt-14 pb-12 md:pt-20 md:pb-16" style={{ backgroundColor: 'var(--surface)' }}>
       <Shell>
-        <p className="label">{eyebrow}</p>
-        <h1 className="display mt-5 max-w-3xl text-[2.25rem] md:text-[3.25rem]">{title}</h1>
-        <p
-          className="mt-5 max-w-2xl text-[1.0625rem] leading-[1.8]"
-          style={{ color: 'var(--ink-soft)' }}
-        >
+        <p className="badge" style={{ color: 'var(--brand-deep)' }}>
+          {eyebrow}
+        </p>
+        <h1 className="display mt-5 max-w-3xl text-[2rem] md:text-[2.75rem]">{title}</h1>
+        <p className="mt-5 max-w-2xl text-[1.0625rem] leading-[1.8]" style={{ color: 'var(--fg-soft)' }}>
           {lead}
         </p>
       </Shell>
@@ -38,7 +33,7 @@ export function PageHead({
   )
 }
 
-/** 구획. 좌측에 라벨, 우측에 내용 — 기록부의 항목 배치. */
+/** 구획. 좌측에 라벨, 우측에 내용. */
 export function Section({
   label,
   title,
@@ -49,15 +44,17 @@ export function Section({
   children: ReactNode
 }): ReactNode {
   return (
-    <section className="border-b py-14 md:py-20" style={{ borderColor: 'var(--rule)' }}>
+    <section className="border-b py-14 md:py-20" style={{ borderColor: 'var(--line)' }}>
       <Shell>
-        <div className="grid gap-8 md:grid-cols-[168px_1fr] md:gap-12">
+        <div className="grid gap-6 md:grid-cols-[168px_1fr] md:gap-12">
           <div>
-            <p className="label md:sticky md:top-24">{label}</p>
+            <p className="label md:sticky md:top-24" style={{ color: 'var(--brand-deep)' }}>
+              {label}
+            </p>
           </div>
           {/* min-w-0 이 없으면 안쪽 표의 min-width 만큼 칸이 벌어져 페이지가 가로로 넘친다. */}
           <div className="min-w-0">
-            {title && <h2 className="display mb-7 text-[1.5rem] md:text-[2rem]">{title}</h2>}
+            {title && <h2 className="display mb-7 text-[1.5rem] md:text-[1.875rem]">{title}</h2>}
             {children}
           </div>
         </div>
@@ -81,23 +78,20 @@ export function Figure({
   muted?: boolean
 }): ReactNode {
   return (
-    <div className="border-t pt-4" style={{ borderColor: 'var(--rule)' }}>
-      <p
-        className="figure text-[1.75rem] leading-none"
-        style={{ color: muted ? 'var(--past)' : 'var(--ink)' }}
-      >
+    <div className="rounded-2xl p-5" style={{ backgroundColor: 'var(--surface)' }}>
+      <p className="figure text-[1.75rem] leading-none" style={{ color: muted ? 'var(--muted)' : 'var(--fg)' }}>
         {value}
         {unit && (
-          <span className="ml-1 text-[0.9rem]" style={{ color: 'var(--ink-soft)' }}>
+          <span className="ml-1 text-[0.9rem] font-medium" style={{ color: 'var(--fg-soft)' }}>
             {unit}
           </span>
         )}
       </p>
-      <p className="mt-2.5 text-[0.9rem]" style={{ color: 'var(--ink)' }}>
+      <p className="mt-3 text-[0.9375rem] font-semibold" style={{ color: 'var(--fg)' }}>
         {label}
       </p>
       {note && (
-        <p className="mt-1 text-[0.8125rem] leading-relaxed" style={{ color: 'var(--ink-soft)' }}>
+        <p className="mt-1 text-[0.8125rem] leading-relaxed" style={{ color: 'var(--fg-soft)' }}>
           {note}
         </p>
       )}

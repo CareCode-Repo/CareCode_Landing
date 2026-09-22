@@ -102,7 +102,7 @@ export function Month24(): ReactNode {
       <ul className="yr-levels">
         {VERDICTS.map((v) => (
           <li key={v.head} style={{ '--c': v.tone } as CSSProperties} data-in="">
-            <span className="stamp" style={{ color: v.tone }}>
+            <span className="badge" style={{ color: v.tone }}>
               {v.head}
             </span>
             <p>{v.body}</p>

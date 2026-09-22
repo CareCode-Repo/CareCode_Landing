@@ -9,17 +9,17 @@
 /** 자격 판정 결과. 소득 미입력을 탈락으로 처리하지 않는 것이 이 서비스의 판단이다. */
 export const VERDICTS = [
   {
-    tone: 'var(--seal-deep)',
+    tone: 'var(--brand-deep)',
     head: '대상입니다',
     body: '자녀 수와 소득 조건을 모두 만족합니다. 예상 총액에 넣습니다.',
   },
   {
-    tone: 'var(--past)',
+    tone: 'var(--muted)',
     head: '판단 보류',
     body: '소득을 입력하지 않으셨습니다. 탈락으로 처리하면 받을 수 있었던 돈이 목록에서 통째로 사라지므로, 보류로 두고 함께 보여 드립니다.',
   },
   {
-    tone: 'var(--stamp)',
+    tone: 'var(--alert-deep)',
     head: '대상 아닙니다',
     body: '자녀 수가 모자라거나 소득이 기준을 넘습니다. 왜 아닌지 함께 적습니다.',
   },

@@ -40,12 +40,12 @@ export default function MonthTimeline(): ReactNode {
           </label>
           <p className="figure mt-2 text-[2.5rem] leading-none md:text-[3.25rem]">
             {months}
-            <span className="ml-1.5 text-[1rem]" style={{ color: 'var(--ink-soft)' }}>
+            <span className="ml-1.5 text-[1rem]" style={{ color: 'var(--fg-soft)' }}>
               개월
             </span>
           </p>
         </div>
-        <p className="text-[0.8125rem]" style={{ color: 'var(--ink-soft)' }}>
+        <p className="text-[0.8125rem]" style={{ color: 'var(--fg-soft)' }}>
           표시를 옮겨 보세요
         </p>
       </div>
@@ -58,7 +58,7 @@ export default function MonthTimeline(): ReactNode {
         value={months}
         onChange={(e) => setMonths(Number(e.target.value))}
         aria-valuetext={`${months}개월`}
-        className="mt-5 w-full accent-[var(--seal)]"
+        className="mt-5 w-full accent-[var(--brand)]"
       />
 
       {/* 축 눈금. 12개월 단위로 끊어 읽는다. */}
@@ -67,7 +67,7 @@ export default function MonthTimeline(): ReactNode {
           <span
             key={tick}
             className="figure text-[0.6875rem]"
-            style={{ color: 'var(--past)' }}
+            style={{ color: 'var(--muted)' }}
           >
             {tick}
           </span>
@@ -80,7 +80,9 @@ export default function MonthTimeline(): ReactNode {
           const width =
             ((Math.min(row.to, AXIS_MAX) - Math.min(row.from, AXIS_MAX) + 1) / AXIS_MAX) * 100
 
-          const tone = row.active ? 'var(--seal)' : row.claimable ? 'var(--stamp)' : 'var(--past)'
+          const tone = row.active ? 'var(--brand)' : row.claimable ? 'var(--alert)' : 'var(--muted)'
+          /* 막대(면)는 밝은 색, 글자는 흰 바탕에서 읽히는 짙은 색 */
+          const ink = row.active ? 'var(--brand-deep)' : row.claimable ? 'var(--alert-deep)' : 'var(--muted)'
 
           return (
             <li
@@ -89,14 +91,14 @@ export default function MonthTimeline(): ReactNode {
             >
               <span
                 className="truncate text-[0.875rem]"
-                style={{ color: row.active ? 'var(--ink)' : 'var(--ink-soft)' }}
+                style={{ color: row.active ? 'var(--fg)' : 'var(--fg-soft)' }}
               >
                 {row.name}
               </span>
 
-              <div className="relative h-6" style={{ backgroundColor: 'var(--paper-deep)' }}>
+              <div className="relative h-6 rounded-full" style={{ backgroundColor: 'var(--gray-100)' }}>
                 <div
-                  className="absolute inset-y-0 transition-colors duration-300"
+                  className="absolute inset-y-0 rounded-full transition-colors duration-300"
                   style={{
                     left: `${left}%`,
                     width: `${width}%`,
@@ -109,14 +111,14 @@ export default function MonthTimeline(): ReactNode {
                   className="absolute inset-y-[-4px] w-[2px] transition-[left] duration-150"
                   style={{
                     left: `calc(${(months / AXIS_MAX) * 100}% - 1px)`,
-                    backgroundColor: 'var(--ink)',
+                    backgroundColor: 'var(--fg)',
                   }}
                 />
               </div>
 
               <span
                 className="col-span-2 text-[0.8125rem] md:col-span-1 md:text-right"
-                style={{ color: tone }}
+                style={{ color: ink }}
               >
                 {row.active ? (
                   row.monthly === null ? (
@@ -129,7 +131,7 @@ export default function MonthTimeline(): ReactNode {
                 ) : row.passed ? (
                   '기간이 지났습니다'
                 ) : (
-                  <span style={{ color: 'var(--past)' }}>아직 대상 아님</span>
+                  <span style={{ color: 'var(--muted)' }}>아직 대상 아님</span>
                 )}
               </span>
             </li>
@@ -139,27 +141,27 @@ export default function MonthTimeline(): ReactNode {
 
       <p
         className="mt-8 border-t pt-6 text-[1.0625rem] leading-[1.85]"
-        style={{ borderColor: 'var(--rule)' }}
+        style={{ borderColor: 'var(--line)' }}
       >
         {months}개월 아이는 지금{' '}
-        <strong style={{ color: 'var(--seal-deep)' }}>{activeCount}건</strong>을 받을 수 있습니다.
+        <strong style={{ color: 'var(--brand-deep)' }}>{activeCount}건</strong>을 받을 수 있습니다.
         {claimableCount > 0 && (
           <>
             {' '}
-            <strong style={{ color: 'var(--stamp)' }}>{claimableCount}건</strong>은 기간이 지났지만
+            <strong style={{ color: 'var(--alert-deep)' }}>{claimableCount}건</strong>은 기간이 지났지만
             아직 소급 신청할 수 있고,
           </>
         )}
         {expiredCount > 0 && (
           <>
             {' '}
-            <span style={{ color: 'var(--past)' }}>{expiredCount}건</span>은 이미 신청 기회가
+            <span style={{ color: 'var(--muted)' }}>{expiredCount}건</span>은 이미 신청 기회가
             지났습니다.
           </>
         )}
       </p>
 
-      <p className="mt-3 text-[0.8125rem] leading-relaxed" style={{ color: 'var(--ink-soft)' }}>
+      <p className="mt-3 text-[0.8125rem] leading-relaxed" style={{ color: 'var(--fg-soft)' }}>
         전국 공통 정책 다섯 가지로만 그린 예시입니다. 실제로는 사는 지역의 지자체 정책이 더해지고,
         소득과 자녀 수에 따라 대상이 갈립니다.
       </p>

@@ -6,14 +6,14 @@ import { monthLabel } from '@/features/grow/stages'
 
 /*
  * 6개월 — 어린이집 대기를 거는 무렵. 동네가 열리고 카메라가 어린이집 앞마당으로 간다.
- * 이 구간의 주인공은 풍경이라 글은 종이 판 하나에 모은다.
+ * 이 구간의 주인공은 풍경이라 글은 카드 하나에 모은다.
  */
 export function Month06(): ReactNode {
   return (
     <section id="m06" data-month={6} data-open="" className="yr-station yr-station--open" aria-labelledby="m06-title">
       <div className="yr-shell">
         <div className="yr-panel" data-in="">
-          <p className="stamp yr-stamp">{monthLabel(6)}</p>
+          <p className="badge yr-month">{monthLabel(6)}</p>
           <h2 id="m06-title" className="display yr-h2">
             자리가 났다는 걸
             <br />
