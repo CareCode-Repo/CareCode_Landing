@@ -1,0 +1,884 @@
+/*
+ * 홈 — 여섯 해(출생 → 72개월).
+ *
+ * 스크롤 진행이 곧 아이의 개월 수다. 그 개월 수가 뒤에 깔린 동네(3D)의 계절·아이의 키·
+ * 카메라가 보는 건물을 정한다. 이 파일은 그 무대와 구간의 문법만 가진다.
+ *
+ * 색·서체·도장은 globals.css 의 육아수첩 토큰을 그대로 쓴다. 이 파일이 새로 만드는 색은 없다.
+ * 클래스는 전부 yr- 로 시작한다 — Tailwind 유틸리티 이름(gap, table, grid …)과 부딪히지 않게.
+ */
+
+:root {
+  --pad: 24px;
+  /* 왼쪽 개월 레일의 폭. 본문 폭이 양쪽에서 이만큼 비켜 선다 */
+  --rail: 88px;
+  --shell: min(1180px, 100% - 2 * max(var(--pad), var(--rail)));
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --grid:
+    linear-gradient(to right, var(--rule) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
+}
+
+@media (max-width: 900px) {
+  :root {
+    --pad: 18px;
+    --rail: 0px;
+  }
+}
+
+.yr-shell {
+  width: var(--shell);
+  margin-inline: auto;
+}
+
+/* 한국어는 기본값이면 음절 단위로 잘린다 — 어절로만 끊는다 */
+.yr-station,
+.yr-hero,
+.yr-close {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* ============================================================
+   무대 — 동네 캔버스와 스크림
+   ============================================================ */
+.yr-sky {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  opacity: var(--sky-op, 1);
+  transition: opacity 0.45s linear;
+  pointer-events: none;
+  background: var(--paper);
+}
+
+.yr-sky canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* WebGL2 가 없거나 동작 줄이기를 켰을 때. 봄 하늘과 잔디 한 줄 — 동네 대신 계절만 남긴다 */
+.yr-sky__fallback {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(70% 50% at 78% 70%, rgba(244, 195, 211, 0.55), transparent 70%),
+    radial-gradient(60% 40% at 88% 58%, rgba(157, 195, 124, 0.45), transparent 70%),
+    linear-gradient(180deg, #e3edf1 0%, #eef3ee 58%, #d6e6c4 58.2%, #bfd6a6 100%);
+}
+
+/* 카피가 앉는 왼쪽을 종이색으로 누른다. 풍경은 오른쪽에서 산다 */
+.yr-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: var(--sky-op, 1);
+  transition: opacity 0.45s linear;
+  background: linear-gradient(94deg, rgba(246, 248, 243, 0.78) 0%, rgba(246, 248, 243, 0.5) 32%, rgba(246, 248, 243, 0) 58%);
+}
+
+@media (max-width: 900px) {
+  .yr-scrim {
+    background: linear-gradient(180deg, rgba(246, 248, 243, 0.4) 0%, rgba(246, 248, 243, 0) 45%);
+  }
+}
+
+/* 고정 캔버스(.yr-sky)가 z-index:0 의 위치 지정 요소라, 위치 지정이 없는 요소는 그 아래에
+   그려진다. 레이아웃의 푸터가 통째로 캔버스 뒤에 깔리지 않게 올린다. */
+body:has(.yr-sky) > footer {
+  position: relative;
+  z-index: 1;
+  background: var(--paper);
+}
+
+/* ============================================================
+   개월 레일 — 페이지의 척추. 시간 순서가 정보 자체라서 장식이 아니다
+   ============================================================ */
+.yr-rail {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--rail);
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  pointer-events: none;
+}
+
+/* 한글은 세로로 눕히면 글자가 옆으로 누워 읽히지 않는다. 레일 폭 안에서 가로로 쓴다 */
+.yr-rail__now {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  white-space: nowrap;
+  text-align: center;
+}
+
+.yr-rail__track {
+  position: relative;
+  width: 1px;
+  flex: 0 1 44vh;
+  background: var(--rule);
+}
+
+.yr-rail__fill {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: calc(var(--rd, 0) * 100%);
+  background: var(--seal);
+}
+
+.yr-rail__ticks {
+  position: absolute;
+  inset: 0;
+}
+
+.yr-rail__tick {
+  position: absolute;
+  left: -3px;
+  width: 7px;
+  height: 1px;
+  background: var(--past);
+}
+
+.yr-rail__tick[data-on='1'] {
+  background: var(--seal);
+  left: -5px;
+  width: 11px;
+}
+
+.yr-rail__cap {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .yr-rail {
+    inset: auto 0 0 0;
+    width: 100%;
+    height: 44px;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 0 var(--pad);
+    background: rgba(246, 248, 243, 0.92);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--rule);
+  }
+
+  .yr-rail__now {
+    order: 3;
+    min-width: 4.2em;
+    text-align: right;
+  }
+
+  .yr-rail__track {
+    height: 1px;
+    width: auto;
+    flex: 1 1 auto;
+  }
+
+  .yr-rail__fill {
+    inset: 0 auto 0 0;
+    height: 100%;
+    width: calc(var(--rd, 0) * 100%);
+  }
+
+  .yr-rail__tick {
+    left: auto;
+    top: -3px;
+    width: 1px;
+    height: 7px;
+  }
+
+  .yr-rail__tick[data-on='1'] {
+    top: -5px;
+    height: 11px;
+    width: 1px;
+  }
+
+  /* 하단 레일이 푸터 마지막 줄을 가리지 않게 */
+  body:has(.yr-rail) {
+    padding-bottom: 44px;
+  }
+}
+
+/* ============================================================
+   구간
+   ============================================================ */
+.yr-station {
+  position: relative;
+  z-index: 1;
+  padding: 132px 0;
+  background: var(--grid) -1px -1px / 28px 28px, var(--paper);
+  /* 위아래 가장자리를 풀어 둔다. 앞뒤 구간에서 동네가 보일 때 칼자국 대신 풍경이 스며든다.
+     패딩(132px)이 페이드(112px)보다 넓어 글자는 흐려지지 않는다. */
+  mask-image: linear-gradient(180deg, transparent 0, #000 112px, #000 calc(100% - 112px), transparent 100%);
+}
+
+/* 동네가 주인공인 구간 — 지면을 비우고 글은 종이 판에 올린다 */
+.yr-station--open {
+  background: transparent;
+  mask-image: none;
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  padding: 112px 0;
+}
+
+@media (max-width: 900px) {
+  .yr-station {
+    padding: 88px 0;
+    mask-image: linear-gradient(180deg, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%);
+  }
+
+  /* 좁은 화면은 판이 화면을 다 덮으므로 풍경이 보일 틈을 위쪽에 둔다 */
+  .yr-station--open {
+    min-height: 0;
+    padding: 46svh 0 64px;
+  }
+}
+
+.yr-head {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: 36px 56px;
+  align-items: end;
+  margin-bottom: 88px;
+}
+
+@media (max-width: 900px) {
+  .yr-head {
+    grid-template-columns: 1fr;
+    align-items: start;
+    margin-bottom: 56px;
+  }
+}
+
+/* 도장 — 이 구간이 아이의 몇 개월인지. 시퀀스가 정보 자체라 장식이 아니다 */
+.yr-stamp {
+  color: var(--seal-deep);
+  font-size: 0.75rem;
+  margin-bottom: 22px;
+}
+
+/* 도장의 숫자 서체(IBM Plex Mono)에는 한글이 없다. 한글이 대체 서체로 넘어가면서 넓은 자간이
+   글자 사이를 벌려 "6개 월"처럼 읽힌다. 한글이 들어가는 도장은 본문 서체로 찍는다. */
+.yr-station .stamp,
+.yr-hero .stamp,
+.yr-close .stamp {
+  font-family: inherit;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.yr-h2 {
+  font-size: clamp(1.9rem, 3.6vw, 2.85rem);
+  /* 얇은 표제는 행간을 넉넉히 둬야 두 줄이 한 덩어리로 읽힌다 */
+  line-height: 1.28;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.yr-h3 {
+  font-size: 1.0625rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin: 88px 0 24px;
+}
+
+.yr-when {
+  margin-left: 10px;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+
+.yr-body {
+  color: var(--ink-soft);
+  font-size: 1.0625rem;
+  line-height: 1.9;
+  max-width: 60ch;
+}
+
+.yr-body p + p {
+  margin-top: 1em;
+}
+
+.yr-body strong,
+.yr-panel__body strong,
+.yr-lede strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.yr-fine {
+  margin-top: 28px;
+  max-width: 70ch;
+  font-size: 0.875rem;
+  line-height: 1.85;
+  color: var(--ink-soft);
+}
+
+.yr-fine a,
+.yr-panel a:not(.yr-btn) {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ============================================================
+   히어로 · 종이 판
+   ============================================================ */
+.yr-hero {
+  position: relative;
+  z-index: 1;
+  min-height: calc(100svh - 60px);
+  display: grid;
+  align-content: center;
+  padding: 72px 0 96px;
+}
+
+@media (max-width: 900px) {
+  .yr-hero {
+    min-height: 0;
+    padding: 38svh 0 64px;
+  }
+}
+
+/* 풍경 위의 글은 종이 한 장에 올린다. 계절마다 바탕색이 바뀌는 위에서도 대비가 보장된다.
+   카드 그리드가 아니라 구간마다 판 하나 — 수첩을 펼쳐 든 모양이다. */
+.yr-panel {
+  max-width: 600px;
+  padding: clamp(24px, 3.4vw, 44px);
+  background: rgba(246, 248, 243, 0.93);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--rule);
+  box-shadow: 4px 4px 0 var(--paper-deep);
+}
+
+.yr-panel__body {
+  margin-top: 22px;
+  font-size: 1rem;
+  line-height: 1.9;
+  color: var(--ink-soft);
+}
+
+.yr-panel__notice {
+  margin: 32px 0 8px;
+}
+
+.yr-panel .yr-h3 {
+  margin-top: 40px;
+}
+
+.yr-display {
+  margin-top: 20px;
+  font-size: clamp(2.5rem, 5.2vw, 4.2rem);
+  line-height: 1.2;
+  letter-spacing: -0.04em;
+}
+
+.yr-lede {
+  margin-top: 26px;
+  max-width: 44ch;
+  font-size: clamp(1.02rem, 1.3vw, 1.125rem);
+  line-height: 1.85;
+  color: var(--ink-soft);
+}
+
+.yr-hero__cta {
+  margin-top: 34px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.yr-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 22px;
+  font-size: 0.95rem;
+  text-decoration: none;
+  border: 1px solid var(--ink);
+  transition: background-color 0.16s var(--ease), color 0.16s var(--ease);
+}
+
+.yr-btn--primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.yr-btn--primary:hover {
+  background: var(--seal-deep);
+  border-color: var(--seal-deep);
+}
+
+.yr-btn--ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--rule);
+}
+
+.yr-btn--ghost:hover {
+  border-color: var(--ink);
+}
+
+.yr-hint {
+  margin-top: 28px;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+
+/* ============================================================
+   구조 문법 — 카드가 아니라 규칙선과 행이 구조를 만든다
+   ============================================================ */
+
+/* 마주 놓는 두 단위 (1개월) */
+.yr-gap {
+  border-top: 1px solid var(--ink);
+}
+
+.yr-gap__row {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--rule);
+  align-items: baseline;
+}
+
+.yr-gap__head {
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.yr-gap__row > span:nth-child(2) {
+  color: var(--ink-soft);
+}
+
+.yr-gap__parent {
+  color: var(--ink);
+}
+
+.yr-gap__row:not(.yr-gap__head) .yr-gap__parent::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 10px;
+  background: var(--seal);
+  vertical-align: 0.15em;
+}
+
+@media (max-width: 700px) {
+  .yr-gap__row {
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: 6px 16px;
+  }
+
+  .yr-gap__row > span:nth-child(3) {
+    grid-column: 2;
+  }
+
+  .yr-gap__head > span:first-child {
+    display: none;
+  }
+
+  .yr-gap__head > span:nth-child(2) {
+    grid-column: 2;
+  }
+}
+
+/* 수치 한 줄 */
+.yr-figures {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 32px 40px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.yr-figures--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.yr-figures li {
+  border-top: 1px solid var(--rule);
+  padding-top: 16px;
+}
+
+.yr-figures__v {
+  font-size: 1.85rem;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.yr-figures__v small {
+  margin-left: 4px;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.yr-figures__k {
+  margin-top: 12px;
+  font-size: 0.9375rem;
+}
+
+.yr-figures__n {
+  margin-top: 4px;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 900px) {
+  .yr-figures,
+  .yr-figures--3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .yr-figures--3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 조건 → 이유 두 칸 */
+.yr-rows {
+  margin: 0;
+}
+
+.yr-rows__row {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 6px 24px;
+  padding: 14px 0;
+  border-top: 1px solid var(--rule);
+  font-size: 0.9375rem;
+  line-height: 1.75;
+}
+
+.yr-rows--wide .yr-rows__row {
+  grid-template-columns: 200px minmax(0, 1fr);
+  padding: 20px 0;
+  font-size: 1rem;
+}
+
+.yr-rows dt {
+  color: var(--ink);
+}
+
+.yr-rows dd {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 620px) {
+  .yr-rows__row,
+  .yr-rows--wide .yr-rows__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 월령 타임라인을 올려 두는 판 (12개월) */
+.yr-play {
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  box-shadow: 4px 4px 0 var(--paper-deep);
+  padding: clamp(22px, 3.4vw, 40px);
+}
+
+/* 고친 기록 원장 (24개월). 안 바뀐 것도 결정이지만, 여기서는 원인이 곧 설명이다 */
+.yr-ledger {
+  border-top: 1px solid var(--ink);
+}
+
+.yr-ledger__row {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr) minmax(0, 1fr) minmax(0, 2fr);
+  gap: 24px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--rule);
+  align-items: baseline;
+  font-size: 0.9375rem;
+}
+
+.yr-ledger__head {
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.yr-ledger__n {
+  color: var(--ink);
+}
+
+.yr-ledger__a {
+  color: var(--past);
+}
+
+.yr-ledger__b {
+  color: var(--seal-deep);
+}
+
+.yr-ledger__d {
+  color: var(--ink-soft);
+  line-height: 1.75;
+}
+
+.yr-ledger__total {
+  border-top: 1px solid var(--ink);
+  border-bottom: 0;
+  padding-top: 22px;
+}
+
+.yr-ledger__total .yr-ledger__a {
+  text-decoration: line-through;
+}
+
+.yr-ledger__total .figure {
+  font-size: 1.15rem;
+}
+
+@media (max-width: 760px) {
+  .yr-ledger__head {
+    display: none;
+  }
+
+  .yr-ledger__row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 4px 16px;
+  }
+
+  .yr-ledger__n,
+  .yr-ledger__d {
+    grid-column: 1 / -1;
+  }
+
+  .yr-ledger__a::before {
+    content: '처음 ';
+    font-size: 0.75rem;
+  }
+
+  .yr-ledger__b::before {
+    content: '지금 ';
+    font-size: 0.75rem;
+  }
+}
+
+/* 세 갈래 판정 — 왼쪽 색 띠가 결과의 종류를 말한다 */
+.yr-levels {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+
+.yr-levels li {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 16px 28px;
+  align-items: baseline;
+  padding: 22px 24px 22px 21px;
+  background: var(--paper);
+  border-left: 3px solid var(--c);
+}
+
+.yr-levels p {
+  color: var(--ink-soft);
+  font-size: 0.9375rem;
+  line-height: 1.8;
+}
+
+@media (max-width: 620px) {
+  .yr-levels li {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 아는 것 / 모르는 것 (36개월) — 못 하는 것은 각주가 아니라 정식 구간이다 */
+.yr-cannots {
+  display: grid;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+
+.yr-cannots__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 40px;
+  padding: 26px 28px;
+  background: var(--paper);
+}
+
+.yr-cannots__row > div + div {
+  border-left: 1px solid var(--rule);
+  padding-left: 40px;
+}
+
+.yr-cannots__v {
+  margin-top: 10px;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.yr-cannots__why {
+  margin-top: 10px;
+  font-size: 0.875rem;
+  line-height: 1.8;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 760px) {
+  .yr-cannots__row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 22px;
+  }
+
+  .yr-cannots__row > div + div {
+    border-left: 0;
+    padding-left: 0;
+    border-top: 1px solid var(--rule);
+    padding-top: 20px;
+  }
+}
+
+/* 기록에서 나온 문장 (48개월) */
+.yr-quote {
+  margin: 64px 0 0;
+  max-width: 62ch;
+}
+
+.yr-quote blockquote {
+  margin: 0;
+  padding: 4px 0 4px 22px;
+  border-left: 2px solid var(--seal);
+  font-size: 1.0625rem;
+  line-height: 1.9;
+}
+
+.yr-quote figcaption {
+  margin-top: 14px;
+  padding-left: 24px;
+}
+
+/* ============================================================
+   닫는 구간 (72개월)
+   ============================================================ */
+.yr-close {
+  position: relative;
+  z-index: 1;
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  padding: 96px 0;
+}
+
+.yr-close__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 360px);
+  gap: 48px;
+  align-items: end;
+}
+
+.yr-close__title {
+  font-size: clamp(2rem, 4vw, 3.1rem);
+  line-height: 1.3;
+  letter-spacing: -0.035em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.yr-docs {
+  display: grid;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  box-shadow: 4px 4px 0 var(--paper-deep);
+}
+
+.yr-doc {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 15px 18px;
+  background: rgba(246, 248, 243, 0.94);
+  backdrop-filter: blur(8px);
+  color: var(--ink);
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition: background-color 0.16s var(--ease);
+}
+
+.yr-doc:hover {
+  background: var(--paper-deep);
+}
+
+@media (max-width: 980px) {
+  .yr-close__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .yr-close {
+    min-height: 0;
+    padding: 46svh 0 72px;
+  }
+}
+
+/* ============================================================
+   모션 — 여섯 해가 지나가는 것이 유일한 연출이다. 나머지는 한 가지 등장뿐
+   ============================================================ */
+
+/* 자바스크립트가 없으면 등장 연출을 걸지 않는다 — 관찰자가 못 돌아 본문이 영영 숨는다.
+   <html> 에 클래스를 붙여 가르면 React 가 소유한 className 과 부딪혀 하이드레이션이 어긋난다.
+   미디어 질의는 DOM 을 건드리지 않고, 모르는 브라우저에서는 본문이 그냥 보인다(안전한 쪽). */
+@media (scripting: enabled) {
+  [data-in] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 0.72s var(--ease),
+      transform 0.72s var(--ease);
+    transition-delay: var(--d, 0ms);
+  }
+
+  [data-in].is-in {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-in] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .yr-sky,
+  .yr-scrim {
+    transition: none;
+  }
+}

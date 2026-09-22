@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { ReactNode } from 'react'
 import { Figure, PageHead, Section } from '@/components/Page'
+import { SILENT_CASES } from '@/content/facts'
 import VacancyNotice from '@/components/VacancyNotice'
 
 export const metadata: Metadata = {
@@ -9,13 +10,6 @@ export const metadata: Metadata = {
     '대기 걸어 둔 시설에 자리가 늘면 알립니다. 정원 관측을 쌓아 입소 시점을 추정하되, 근거가 없으면 확률을 만들지 않습니다.',
 }
 
-/** 알리지 않는 경우. 이 표가 알림 설계의 핵심이라 앞에 세운다. */
-const SILENT_CASES = [
-  { when: '관측이 한 번뿐일 때', why: '늘었는지 줄었는지 알 수 없습니다' },
-  { when: '빈자리가 그대로일 때', why: '이미 알고 계십니다' },
-  { when: '빈자리가 줄었을 때', why: '알릴 내용이 아닙니다' },
-  { when: '최근 2주 안에 보냈을 때', why: '같은 자리를 두 번 알리면 믿지 않게 됩니다' },
-]
 
 export default function FacilitiesPage(): ReactNode {
   return (
