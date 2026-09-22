@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { ReactNode } from 'react'
 import { PageHead, Section, Shell } from '@/components/Page'
+import { KNOWN_UNKNOWN } from '@/content/facts'
 import { MEASURED_LABEL, MEASURED_ON, SOURCES, SYNC_SCHEDULE, formatCount } from '@/content/figures'
 
 export const metadata: Metadata = {
@@ -9,29 +10,6 @@ export const metadata: Metadata = {
     '어디서 받아 오는지, 무엇을 알 수 있고 무엇을 알 수 없는지. 비어 있는 지역과 못 채운 값을 그대로 적었습니다.',
 }
 
-/** 이 표가 이 페이지의 이유다. 마케팅 페이지가 보통 쓰지 않는 오른쪽 칸. */
-const LEDGER = [
-  {
-    known: '시설 전체의 정원과 현원',
-    unknown: '반별 정원',
-    why: '공공데이터가 시설 단위로만 줍니다. 0세반이 찼는데 5세반에 자리가 난 것일 수 있어, 알림에 그대로 적습니다.',
-  },
-  {
-    known: '정책의 대상 연령·지역·소득 기준',
-    unknown: '일부 정책의 지원 금액',
-    why: '금액이 숫자가 아니라 설명 문장 안에 섞여 옵니다. 기계로 뽑다 실패한 건 미상으로 두고, 받아 보신 분들의 제보로 채웁니다.',
-  },
-  {
-    known: '관측된 정원 변동',
-    unknown: '대기 순번이 도는 시점',
-    why: '정부가 공개하지 않습니다. 부모들이 남긴 입소 기록이 세 건 이상 모인 시설만 통계를 냅니다.',
-  },
-  {
-    known: '전국 시군구 200여 곳의 시설',
-    unknown: '광주와 전남의 시설',
-    why: '두 정부 API 모두 이 두 지역에서 빈 결과를 돌려줍니다. 우리 쪽 문제가 아니라 확인된 사실이라 적어 둡니다.',
-  },
-]
 
 export default function DataPage(): ReactNode {
   return (
@@ -126,7 +104,7 @@ export default function DataPage(): ReactNode {
           </p>
 
           <ul className="mt-10 space-y-px" style={{ backgroundColor: 'var(--rule)' }}>
-            {LEDGER.map((row) => (
+            {KNOWN_UNKNOWN.map((row) => (
               <li
                 key={row.unknown}
                 className="p-6 md:p-7"

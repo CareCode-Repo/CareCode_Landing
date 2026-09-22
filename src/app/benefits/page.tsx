@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 import { Figure, PageHead, Section } from '@/components/Page'
+import { VERDICTS } from '@/content/facts'
 
 export const metadata: Metadata = {
   title: '지원금',
@@ -9,24 +10,6 @@ export const metadata: Metadata = {
     '놓친 지원금 찾기, 거주지별 비교, 실수령액 제보로 확정하는 금액. 추정치는 추정치라고 표기합니다.',
 }
 
-/** 자격 판정 결과. 소득 미입력을 탈락으로 처리하지 않는 것이 이 서비스의 판단이다. */
-const VERDICTS = [
-  {
-    tone: 'var(--seal-deep)',
-    head: '대상입니다',
-    body: '자녀 수와 소득 조건을 모두 만족합니다. 예상 총액에 넣습니다.',
-  },
-  {
-    tone: 'var(--past)',
-    head: '판단 보류',
-    body: '소득을 입력하지 않으셨습니다. 탈락으로 처리하면 받을 수 있었던 돈이 목록에서 통째로 사라지므로, 보류로 두고 함께 보여 드립니다.',
-  },
-  {
-    tone: 'var(--stamp)',
-    head: '대상 아닙니다',
-    body: '자녀 수가 모자라거나 소득이 기준을 넘습니다. 왜 아닌지 함께 적습니다.',
-  },
-]
 
 export default function BenefitsPage(): ReactNode {
   return (
