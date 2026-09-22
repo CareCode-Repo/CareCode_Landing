@@ -26,17 +26,17 @@ export default function BenefitsPage(): ReactNode {
       />
 
       <Section label="자격 판정" title="세 갈래로 나눕니다">
-        <ul className="space-y-px" style={{ backgroundColor: 'var(--rule)' }}>
+        <ul className="space-y-px" style={{ backgroundColor: 'var(--line)' }}>
           {VERDICTS.map((v) => (
-            <li key={v.head} className="p-6" style={{ backgroundColor: 'var(--paper)' }}>
+            <li key={v.head} className="p-6" style={{ backgroundColor: 'var(--bg)' }}>
               <div className="flex flex-wrap items-baseline gap-3">
-                <span className="stamp" style={{ color: v.tone }}>
+                <span className="badge" style={{ color: v.tone }}>
                   {v.head}
                 </span>
               </div>
               <p
                 className="mt-4 max-w-2xl text-[0.95rem] leading-[1.85]"
-                style={{ color: 'var(--ink-soft)' }}
+                style={{ color: 'var(--fg-soft)' }}
               >
                 {v.body}
               </p>
@@ -54,15 +54,15 @@ export default function BenefitsPage(): ReactNode {
           </p>
         </div>
 
-        <div className="mt-8 grid gap-px md:grid-cols-2" style={{ backgroundColor: 'var(--rule)' }}>
-          <div className="p-6" style={{ backgroundColor: 'var(--paper)' }}>
+        <div className="mt-8 grid gap-px md:grid-cols-2" style={{ backgroundColor: 'var(--line)' }}>
+          <div className="p-6" style={{ backgroundColor: 'var(--bg)' }}>
             <p className="label">원인 하나</p>
             <p className="mt-3 text-[0.95rem] leading-[1.85]">
               자녀 수와 소득 조건을 보지 않고 지역에 있는 정책을 전부 더하고 있었습니다. 다자녀 전용
               지원금이 외동 가정에도 합산됐습니다.
             </p>
           </div>
-          <div className="p-6" style={{ backgroundColor: 'var(--paper)' }}>
+          <div className="p-6" style={{ backgroundColor: 'var(--bg)' }}>
             <p className="label">원인 둘</p>
             <p className="mt-3 text-[0.95rem] leading-[1.85]">
               <strong>대상 연령을 지급 기간으로 착각</strong>했습니다. 월 250만 원짜리 지원금에 대상
@@ -74,21 +74,21 @@ export default function BenefitsPage(): ReactNode {
         <div className="mt-8 flex flex-wrap items-center gap-5">
           <span
             className="figure text-[1.5rem]"
-            style={{ color: 'var(--past)', textDecoration: 'line-through' }}
+            style={{ color: 'var(--muted)', textDecoration: 'line-through' }}
           >
             295,068,000원
           </span>
-          <span aria-hidden="true" style={{ color: 'var(--past)' }}>
+          <span aria-hidden="true" style={{ color: 'var(--muted)' }}>
             →
           </span>
-          <span className="figure text-[1.75rem]" style={{ color: 'var(--seal-deep)' }}>
+          <span className="figure text-[1.75rem]" style={{ color: 'var(--brand-deep)' }}>
             80,568,000원
           </span>
         </div>
 
         <p
           className="mt-6 max-w-2xl text-[0.9rem] leading-[1.85]"
-          style={{ color: 'var(--ink-soft)' }}
+          style={{ color: 'var(--fg-soft)' }}
         >
           지급 기간을 별도 항목으로 떼어 내고 자격 판정을 넣은 결과입니다. 융자는 갚아야 하는 돈이라
           총액에서 빼고 따로 안내합니다. 같은 목적이라 동시에 받을 수 없는 지원금은 가장 큰 것
@@ -104,7 +104,7 @@ export default function BenefitsPage(): ReactNode {
             <span className="figure text-[0.95rem]">“융자(연 1.5%)”</span> 같은 식입니다.
             기계로 뽑다 실패한 정책을 버리면 목록에서 사라져 존재 자체를 모르게 됩니다.
           </p>
-          <p className="mt-5 text-[1.0625rem] leading-[1.9]" style={{ color: 'var(--ink-soft)' }}>
+          <p className="mt-5 text-[1.0625rem] leading-[1.9]" style={{ color: 'var(--fg-soft)' }}>
             그래서 버리지 않고 <span className="unknown">미상</span>으로 남깁니다. 대신 실제로
             받아 보신 분께 금액을 묻고, 같은 값이 세 건 모이면 그때 확정합니다. 관리자가 직접 확인한
             정책은 지역별 검증 비율과 함께 표시합니다.
@@ -129,7 +129,7 @@ export default function BenefitsPage(): ReactNode {
             같은 조건이어도 지자체마다 지원이 다릅니다. 다른 지역에 살면 얼마를 더 받는지 계산하고,
             차액의 근거가 된 정책 목록을 함께 드립니다.
           </p>
-          <p className="mt-5 text-[0.9rem] leading-[1.85]" style={{ color: 'var(--ink-soft)' }}>
+          <p className="mt-5 text-[0.9rem] leading-[1.85]" style={{ color: 'var(--fg-soft)' }}>
             숫자만 주면 믿을 이유가 없습니다. 어떤 정책 때문에 차이가 나는지 보이면 직접 확인하실 수
             있습니다.
           </p>

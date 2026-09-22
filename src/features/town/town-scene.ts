@@ -63,11 +63,11 @@ type Season = {
 }
 
 const SEASONS: Season[] = [
-  { at: 0.5, sky: 0xdfe6ec, grass: 0xb3b8a6, ginkgo: 0x8d7b5a, cherry: 0x8d7b5a, canopy: 0.0, snow: 0.92, sunEl: 0.5, sunI: 2.3, sun: 0xfff0dc, ambI: 1.0 },
-  { at: 3.4, sky: 0xe3edf1, grass: 0x9dc37c, ginkgo: 0xa9cf6e, cherry: 0xf4c3d3, canopy: 1.0, snow: 0.0, sunEl: 0.85, sunI: 2.7, sun: 0xfff6e8, ambI: 0.85 },
-  { at: 6.6, sky: 0xd5e8f2, grass: 0x6aa64e, ginkgo: 0x4f9437, cherry: 0x4c8f35, canopy: 1.08, snow: 0.0, sunEl: 1.05, sunI: 2.95, sun: 0xfffaf0, ambI: 0.8 },
-  { at: 9.6, sky: 0xece5d8, grass: 0xb1ad76, ginkgo: 0xf1c230, cherry: 0xd2683a, canopy: 0.95, snow: 0.0, sunEl: 0.72, sunI: 2.6, sun: 0xffe7c4, ambI: 0.85 },
-  { at: 11.3, sky: 0xe2e3e0, grass: 0xa9ab8c, ginkgo: 0xd8b24a, cherry: 0xa4643e, canopy: 0.25, snow: 0.2, sunEl: 0.55, sunI: 2.4, sun: 0xfff0dc, ambI: 0.95 },
+  { at: 0.5, sky: 0xe6eef4, grass: 0xd5dccd, ginkgo: 0x8d7b5a, cherry: 0x8d7b5a, canopy: 0.0, snow: 0.92, sunEl: 0.5, sunI: 2.3, sun: 0xfff0dc, ambI: 1.0 },
+  { at: 3.4, sky: 0xdcefff, grass: 0xa9dc86, ginkgo: 0xb5e89e, cherry: 0xf4c3d3, canopy: 1.0, snow: 0.0, sunEl: 0.85, sunI: 2.7, sun: 0xfff6e8, ambI: 0.85 },
+  { at: 6.6, sky: 0xd3ecff, grass: 0x86cf62, ginkgo: 0x5fb83c, cherry: 0x5aae3a, canopy: 1.08, snow: 0.0, sunEl: 1.05, sunI: 2.95, sun: 0xfffaf0, ambI: 0.8 },
+  { at: 9.6, sky: 0xeef0f2, grass: 0xc8cf8a, ginkgo: 0xffd84a, cherry: 0xd2683a, canopy: 0.95, snow: 0.0, sunEl: 0.72, sunI: 2.6, sun: 0xffe7c4, ambI: 0.85 },
+  { at: 11.3, sky: 0xe9ecee, grass: 0xc9cfb1, ginkgo: 0xd8b24a, cherry: 0xa4643e, canopy: 0.25, snow: 0.2, sunEl: 0.55, sunI: 2.4, sun: 0xfff0dc, ambI: 0.95 },
 ]
 
 function seasonAt(m: number): { a: Season; b: Season; k: number } {
@@ -86,7 +86,7 @@ function seasonAt(m: number): { a: Season; b: Season; k: number } {
 
 /* ------------------------------------------------------------------
    개월 수 키프레임 — 가족이 서 있는 곳과 카메라가 보는 곳.
-   구간 사이에서 smoothstep 으로 이으므로, 도장에 찍힌 개월 수에서 가족이 "도착"한다.
+   구간 사이에서 smoothstep 으로 이으므로, 배지에 적힌 개월 수에서 가족이 "도착"한다.
    ------------------------------------------------------------------ */
 type Place = 'home' | 'daycare' | 'tree' | 'clinic' | 'center' | 'town'
 
@@ -94,15 +94,15 @@ type Beat = { m: number; at: [number, number]; look: [number, number]; dist: num
 
 /* 좌표는 아래 배치(PLACES)와 같은 동네 지도를 본다. 가족은 보도(±4.9) 위를 걷는다. */
 const BEATS: Beat[] = [
-  { m: 0, at: [-26, -5.2], look: [-20, -8], dist: 92, focus: 'home' },
-  { m: 6, at: [15, -5.2], look: [13, -10], dist: 74, focus: 'daycare' },
-  { m: 12, at: [11.5, 11.5], look: [13, 12], dist: 70, focus: 'tree' },
-  { m: 18, at: [-11.5, -5.2], look: [-10, -9], dist: 72, focus: 'clinic' },
-  { m: 24, at: [-5.2, 14], look: [-11, 12], dist: 76, focus: 'center' },
-  { m: 36, at: [17, -5.2], look: [13, -10], dist: 80, focus: 'daycare' },
-  { m: 48, at: [18, 12], look: [9, 8], dist: 90, focus: 'tree' },
-  { m: 60, at: [5.2, 9], look: [0, 0], dist: 104, focus: 'town' },
-  { m: 72, at: [-24, -5.2], look: [-4, -2], dist: 122, focus: 'town' },
+  { m: 0, at: [-26, -5.2], look: [-20, -8], dist: 78, focus: 'home' },
+  { m: 6, at: [15, -5.2], look: [13, -10], dist: 60, focus: 'daycare' },
+  { m: 12, at: [11.5, 11.5], look: [13, 12], dist: 56, focus: 'tree' },
+  { m: 18, at: [-11.5, -5.2], look: [-10, -9], dist: 58, focus: 'clinic' },
+  { m: 24, at: [-5.2, 14], look: [-11, 12], dist: 62, focus: 'center' },
+  { m: 36, at: [17, -5.2], look: [13, -10], dist: 66, focus: 'daycare' },
+  { m: 48, at: [18, 12], look: [9, 8], dist: 76, focus: 'tree' },
+  { m: 60, at: [5.2, 9], look: [0, 0], dist: 88, focus: 'town' },
+  { m: 72, at: [-24, -5.2], look: [-4, -2], dist: 104, focus: 'town' },
 ]
 
 function beatAt(m: number): { a: Beat; b: Beat; k: number } {
@@ -145,8 +145,8 @@ export function mount(host: HTMLElement): TownHandle {
   /* r18x 부터 PCFSoftShadowMap 은 없어졌고 PCFShadowMap 이 부드러운 쪽을 맡는다 */
   renderer.shadowMap.type = THREE.PCFShadowMap
   renderer.toneMapping = THREE.ACESFilmicToneMapping
-  /* 종이색 지면 위에 앉는 장면이라 한낮에도 하얗게 뜨지 않게 조금 누른다 */
-  renderer.toneMappingExposure = 0.96
+  /* 흰 벽이 많은 장면이라 1 을 크게 넘기면 벽과 보도가 하얗게 날아간다 */
+  renderer.toneMappingExposure = 1.02
 
   const scene = new THREE.Scene()
   const skyColor = new THREE.Color(SEASONS[1].sky)
@@ -162,7 +162,7 @@ export function mount(host: HTMLElement): TownHandle {
   const CAM_DIR = new THREE.Vector3(0.62, 0.72, 0.86).normalize()
   /* 카피가 왼쪽에 앉는 넓은 화면에서는 피사체를 오른쪽으로 민다(거리에 대한 비율) */
   let panRatio = 0
-  /* 좁은 화면은 종이 판이 아래쪽을 덮으므로 피사체를 위로 올린다(화면 높이에 대한 비율) */
+  /* 좁은 화면은 카드이 아래쪽을 덮으므로 피사체를 위로 올린다(화면 높이에 대한 비율) */
   let liftRatio = 0
   /* 세로로 긴 화면은 가로 시야가 좁아 같은 거리에서 건물만 꽉 찬다. 거리를 늘려 동네 폭을 맞춘다 */
   let distScale = 1
@@ -187,7 +187,7 @@ export function mount(host: HTMLElement): TownHandle {
   }
 
   /* ---------------- 조명 ---------------- */
-  const hemi = new THREE.HemisphereLight(0xdfeaf2, 0x8a8a70, 0.85)
+  const hemi = new THREE.HemisphereLight(0xdfeaf2, 0xb9c9a8, 0.85)
   scene.add(hemi)
 
   const sun = new THREE.DirectionalLight(0xfff6e8, 2.7)
@@ -222,7 +222,7 @@ export function mount(host: HTMLElement): TownHandle {
   ground.receiveShadow = true
   world.add(ground)
 
-  const asphaltTex = grainTexture(256, '#62666b', '#2a2d30', 0.4)
+  const asphaltTex = grainTexture(256, '#8e9398', '#6d7277', 0.35)
   asphaltTex.repeat.set(30, 2)
   const asphaltMat = new THREE.MeshStandardMaterial({ color: 0xffffff, map: asphaltTex, roughness: 0.95 })
   const asphaltBase = new THREE.Color(0xffffff)
@@ -237,7 +237,7 @@ export function mount(host: HTMLElement): TownHandle {
   roadZ.receiveShadow = true
   world.add(roadX, roadZ)
 
-  const walkTex = grainTexture(128, '#d2d5cd', '#9aa096', 0.3)
+  const walkTex = grainTexture(128, '#f2f2ef', '#d8d8d4', 0.25)
   walkTex.repeat.set(20, 1)
   const walkMat = new THREE.MeshStandardMaterial({ color: 0xffffff, map: walkTex, roughness: 0.95 })
   const walkBase = new THREE.Color(0xffffff)
@@ -257,7 +257,7 @@ export function mount(host: HTMLElement): TownHandle {
 
   /* 중앙선(노란 겹선)과 횡단보도. 막대 하나하나를 메시로 만들면 드로우콜이 수십 개라 인스턴스로 */
   const lineGeo = new THREE.BoxGeometry(1, 0.02, 1)
-  const yellowMat = new THREE.MeshStandardMaterial({ color: 0xe6c24a, roughness: 0.7 })
+  const yellowMat = new THREE.MeshStandardMaterial({ color: 0xffe54e, roughness: 0.7 })
   const whiteMat = new THREE.MeshStandardMaterial({ color: 0xf1f2ed, roughness: 0.7 })
   const tmpM = new THREE.Matrix4()
   const tmpQ = new THREE.Quaternion()
@@ -298,8 +298,8 @@ export function mount(host: HTMLElement): TownHandle {
   /* ================================================================
      건물 — 벽은 상자 하나, 창은 텍스처. 옥상은 공용 재질이라 눈이 한 번에 쌓인다.
      ================================================================ */
-  const roofMat = new THREE.MeshStandardMaterial({ color: 0xb8b3a8, roughness: 0.95 })
-  const roofBase = new THREE.Color(0xb8b3a8)
+  const roofMat = new THREE.MeshStandardMaterial({ color: 0xe9e9e4, roughness: 0.95 })
+  const roofBase = new THREE.Color(0xe9e9e4)
 
   type Spec = {
     x: number
@@ -355,7 +355,7 @@ export function mount(host: HTMLElement): TownHandle {
     const g = new THREE.Group()
     const base = s.shopfront ? s.floorH : 0
     const upper = s.shopfront ? s.floors - 1 : s.floors
-    const walls = wallMaterial(s.wall, s.glass ?? '#7f95a6', s.frame ?? '#cfc6b4')
+    const walls = wallMaterial(s.wall, s.glass ?? '#9fc3dc', s.frame ?? '#e3e3de')
 
     if (upper > 0) {
       const h = upper * s.floorH
@@ -366,7 +366,7 @@ export function mount(host: HTMLElement): TownHandle {
     }
 
     if (s.shopfront) {
-      const shop = wallMaterial(s.shopfront, '#3f5868', '#2f3b44')
+      const shop = wallMaterial(s.shopfront, '#7fa9c6', '#c9d2d8')
       const storefront = new THREE.Mesh(wallBox(s.w - 0.3, s.floorH, s.d - 0.3, 1), [shop, roofMat])
       storefront.position.set(s.x, s.floorH / 2, s.z)
       storefront.castShadow = storefront.receiveShadow = true
@@ -402,13 +402,16 @@ export function mount(host: HTMLElement): TownHandle {
     world.add(m)
   }
 
-  const SEAL = 0x36aa1c
-  const STAMP = 0xc2453d
+  /* 앱 팔레트 — green-600 · red · yellow · blue */
+  const SEAL = 0x4fbe27
+  const STAMP = 0xe55656
+  const YELLOW = 0xffe54e
+  const BLUE = 0x2764be
 
   // 집 — 4층 빌라. 정면(+z)이 보도를 본다
   const P = PLACES
-  building({ ...P.home, floors: 4, floorH: 2.9, wall: '#ebe2d2', frame: '#cdbfa6' })
-  sign(P.home.x, 1.1, P.home.z + P.home.d / 2 + 0.1, 2.2, 2.2, 0x8a7d66) // 현관문
+  building({ ...P.home, floors: 4, floorH: 2.9, wall: '#ffffff', frame: '#e6e2da' })
+  sign(P.home.x, 1.1, P.home.z + P.home.d / 2 + 0.1, 2.2, 2.2, 0xb58a63) // 현관문
   {
     const canopy = new THREE.Mesh(new THREE.BoxGeometry(3.4, 0.14, 1.4), roofMat)
     canopy.position.set(P.home.x, 2.3, P.home.z + P.home.d / 2 + 0.7)
@@ -417,14 +420,14 @@ export function mount(host: HTMLElement): TownHandle {
   }
 
   // 소아청소년과가 든 모퉁이 상가 — 1층 유리, 2층 간판
-  building({ ...P.clinic, floors: 3, floorH: 3.4, wall: '#f1efe9', frame: '#c9ccc6', shopfront: '#e7e9e4' })
+  building({ ...P.clinic, floors: 3, floorH: 3.4, wall: '#f7f7f5', frame: '#dfe3e6', shopfront: '#ffffff' })
   sign(P.clinic.x, 4.6, P.clinic.z + P.clinic.d / 2 + 0.1, 6.5, 1.1, 0xffffff)
   sign(P.clinic.x - 2.6, 4.6, P.clinic.z + P.clinic.d / 2 + 0.22, 1.0, 0.8, SEAL)
   sign(P.clinic.x + P.clinic.w / 2 + 0.1, 4.6, P.clinic.z, 5, 1.1, 0xffffff, true)
 
   // 어린이집 — 2층, 초록 띠, 앞마당과 울타리
-  building({ ...P.daycare, floors: 2, floorH: 3.2, wall: '#f6f0e3', frame: '#e3cf9c', trim: SEAL })
-  sign(P.daycare.x - 3, 5.2, P.daycare.z + P.daycare.d / 2 + 0.1, 4.2, 0.9, 0xf2b93c)
+  building({ ...P.daycare, floors: 2, floorH: 3.2, wall: '#fffaf0', frame: '#ffe28a', trim: SEAL })
+  sign(P.daycare.x - 3, 5.2, P.daycare.z + P.daycare.d / 2 + 0.1, 4.2, 0.9, YELLOW)
   {
     const yardZ0 = P.daycare.z + P.daycare.d / 2 // 건물 앞면
     const yardZ1 = -6.8 // 울타리
@@ -449,7 +452,7 @@ export function mount(host: HTMLElement): TownHandle {
     world.add(rail)
 
     /* 미끄럼틀 — 노랑 발판, 빨강 활주면 */
-    const slideBase = new THREE.Mesh(new RoundedBoxGeometry(1.2, 1.4, 1.2, 2, 0.08), new THREE.MeshStandardMaterial({ color: 0xf2b93c, roughness: 0.6 }))
+    const slideBase = new THREE.Mesh(new RoundedBoxGeometry(1.2, 1.4, 1.2, 2, 0.08), new THREE.MeshStandardMaterial({ color: YELLOW, roughness: 0.6 }))
     slideBase.position.set(P.daycare.x + 3.8, 0.7, yardZ0 + 1.2)
     const slide = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.1, 2.2), new THREE.MeshStandardMaterial({ color: STAMP, roughness: 0.5 }))
     slide.position.set(P.daycare.x + 3.8, 0.75, yardZ0 + 2.5)
@@ -463,8 +466,8 @@ export function mount(host: HTMLElement): TownHandle {
   }
 
   // 행정복지센터 — 정면(+x)이 z 축 도로를 본다. 국기 게양대
-  building({ ...P.center, floors: 2, floorH: 3.6, wall: '#e2ddd2', glass: '#6f8796', frame: '#b8b1a2', trim: 0x9f988a })
-  sign(P.center.x + P.center.w / 2 + 0.1, 5.6, P.center.z, 5.5, 0.9, 0x2f5f8f, true)
+  building({ ...P.center, floors: 2, floorH: 3.6, wall: '#f3f4f1', glass: '#9fb9cc', frame: '#d6dad3', trim: 0xd9dcd6 })
+  sign(P.center.x + P.center.w / 2 + 0.1, 5.6, P.center.z, 5.5, 0.9, BLUE, true)
   {
     const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.09, 8.5, 8), new THREE.MeshStandardMaterial({ color: 0xd7d9d6, metalness: 0.4, roughness: 0.4 }))
     pole.position.set(-7.2, 4.25, 8.4)
@@ -476,22 +479,24 @@ export function mount(host: HTMLElement): TownHandle {
   }
 
   // 배경 아파트와 상가 — 뒤쪽(-z)과 왼쪽(-x)에만 둔다. 앞에 두면 주인공 건물을 가린다
+  /* 배경 건물은 낮고 흰 것만 둔다. 12~14층 탑을 두었더니 주인공 건물을 누르고 동네가
+     아파트 분양 광고처럼 읽혔다. */
   const FILLER: Spec[] = [
-    { x: -30, z: -36, w: 16, d: 10, floors: 12, floorH: 2.9, wall: '#e6e4df' },
-    { x: -6, z: -38, w: 12, d: 10, floors: 9, floorH: 2.9, wall: '#dcdfdb' },
-    { x: 16, z: -36, w: 14, d: 10, floors: 14, floorH: 2.9, wall: '#ece7dc' },
-    { x: 40, z: -32, w: 12, d: 10, floors: 8, floorH: 2.9, wall: '#e2e4e0' },
-    { x: 40, z: -14, w: 10, d: 10, floors: 4, floorH: 3.1, wall: '#efe8dc', shopfront: '#e4e1d8' },
-    { x: -48, z: -12, w: 10, d: 12, floors: 5, floorH: 2.9, wall: '#e9e3d6' },
-    { x: -48, z: 16, w: 10, d: 12, floors: 4, floorH: 3.0, wall: '#dfe1dc' },
-    { x: -28, z: 32, w: 12, d: 10, floors: 3, floorH: 3.2, wall: '#ece6da', shopfront: '#e2dfd6' },
+    { x: -30, z: -34, w: 16, d: 10, floors: 4, floorH: 2.9, wall: '#ffffff' },
+    { x: -6, z: -36, w: 12, d: 10, floors: 3, floorH: 2.9, wall: '#f6f6f3' },
+    { x: 16, z: -34, w: 14, d: 10, floors: 4, floorH: 2.9, wall: '#ffffff' },
+    { x: 40, z: -32, w: 12, d: 10, floors: 3, floorH: 2.9, wall: '#f4f5f2' },
+    { x: 40, z: -14, w: 10, d: 10, floors: 3, floorH: 3.1, wall: '#ffffff', shopfront: '#fbfbf9' },
+    { x: -48, z: -12, w: 10, d: 12, floors: 3, floorH: 2.9, wall: '#f7f6f2' },
+    { x: -48, z: 16, w: 10, d: 12, floors: 2, floorH: 3.0, wall: '#ffffff' },
+    { x: -28, z: 32, w: 12, d: 10, floors: 2, floorH: 3.2, wall: '#f6f6f3', shopfront: '#ffffff' },
   ]
   FILLER.forEach((s) => building(s))
 
   /* ================================================================
      나무 — 은행나무 가로수, 공원의 벚나무, 그리고 태어난 해에 심은 한 그루
      ================================================================ */
-  const trunkMat = new THREE.MeshStandardMaterial({ color: 0x6b5a48, roughness: 1 })
+  const trunkMat = new THREE.MeshStandardMaterial({ color: 0x8a6f58, roughness: 1 })
   const ginkgoMat = new THREE.MeshStandardMaterial({ color: SEASONS[1].ginkgo, roughness: 0.9 })
   const cherryMat = new THREE.MeshStandardMaterial({ color: SEASONS[1].cherry, roughness: 0.9 })
 
@@ -554,14 +559,14 @@ export function mount(host: HTMLElement): TownHandle {
      4월생이라 해마다 생일 무렵에 꽃이 핀다. */
   const pathRing = new THREE.Mesh(
     new THREE.RingGeometry(4.6, 6.0, 48),
-    new THREE.MeshStandardMaterial({ color: 0xdccfb3, roughness: 1 }),
+    new THREE.MeshStandardMaterial({ color: 0xefe6d2, roughness: 1 }),
   )
   pathRing.rotation.x = -Math.PI / 2
   pathRing.position.set(P.park.x, 0.03, P.park.z)
   pathRing.receiveShadow = true
   world.add(pathRing)
 
-  const benchMat = new THREE.MeshStandardMaterial({ color: 0x8c6a4a, roughness: 0.8 })
+  const benchMat = new THREE.MeshStandardMaterial({ color: 0xc9a47a, roughness: 0.8 })
   for (let i = 0; i < 3; i++) {
     const a = (i / 3) * Math.PI * 2 + 0.9
     const bench = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.45, 0.5), benchMat)
@@ -602,9 +607,9 @@ export function mount(host: HTMLElement): TownHandle {
   }
 
   const family = new THREE.Group()
-  const parent = person(0x3f6f8f, 0x39424c, 0.075)
+  const parent = person(SEAL, 0x4a5563, 0.075)
   parent.scale.setScalar(ADULT)
-  const child = person(0xf2b93c, 0x5d6f86, 0.11)
+  const child = person(YELLOW, BLUE, 0.11)
   child.position.set(0.55, 0, 0.1)
   /* 책가방 — 취학을 앞둔 해에만 멘다 */
   const backpack = new THREE.Mesh(new RoundedBoxGeometry(0.2, 0.24, 0.12, 2, 0.03), new THREE.MeshStandardMaterial({ color: STAMP, roughness: 0.6 }))
@@ -615,7 +620,7 @@ export function mount(host: HTMLElement): TownHandle {
   const stroller = new THREE.Group()
   {
     const frameMat = new THREE.MeshStandardMaterial({ color: 0x2f3439, roughness: 0.6, metalness: 0.3 })
-    const basket = new THREE.Mesh(new RoundedBoxGeometry(0.5, 0.36, 0.78, 2, 0.08), new THREE.MeshStandardMaterial({ color: 0x9fb8a2, roughness: 0.8 }))
+    const basket = new THREE.Mesh(new RoundedBoxGeometry(0.5, 0.36, 0.78, 2, 0.08), new THREE.MeshStandardMaterial({ color: 0xd3f1c4, roughness: 0.8 }))
     basket.position.set(0, 0.62, 0)
     const hood = new THREE.Mesh(new THREE.SphereGeometry(0.3, 12, 8, 0, Math.PI * 2, 0, Math.PI / 2), basket.material)
     hood.position.set(0, 0.78, -0.2)
@@ -652,7 +657,7 @@ export function mount(host: HTMLElement): TownHandle {
   }
   const walkerBody = new THREE.InstancedMesh(new THREE.CapsuleGeometry(0.16, 0.6, 4, 8), new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.85 }), WALKERS.length)
   const walkerHead = new THREE.InstancedMesh(new THREE.SphereGeometry(0.12, 10, 8), skinMat, WALKERS.length)
-  const COATS = [0x5b7fa6, 0xc2453d, 0xe0c068, 0x6f8f5a, 0x8b8f96, 0xe8e2d4, 0x39424c]
+  const COATS = [BLUE, STAMP, YELLOW, 0x876bc8, 0x9e9e9e, 0xffffff, SEAL]
   WALKERS.forEach((_, i) => walkerBody.setColorAt(i, new THREE.Color(COATS[i % COATS.length])))
   walkerBody.castShadow = walkerHead.castShadow = true
   world.add(walkerBody, walkerHead)
@@ -661,17 +666,17 @@ export function mount(host: HTMLElement): TownHandle {
   type Car = { g: THREE.Group; axis: 'x' | 'z'; lane: number; dir: 1 | -1; start: number; speed: number }
   const cars: Car[] = []
   const CAR_SPEC: [number, 'x' | 'z', 1 | -1, number, number][] = [
-    [0xf2f2ee, 'x', 1, -40, 7],
-    [0x3a4450, 'x', -1, 10, 6],
-    [0xf2b93c, 'x', 1, 20, 5],
-    [0x8d949b, 'z', 1, -20, 6.5],
-    [0x2f5f8f, 'z', -1, 35, 5.5],
+    [0xffffff, 'x', 1, -40, 7],
+    [0xbdbdbd, 'x', -1, 10, 6],
+    [YELLOW, 'x', 1, 20, 5],
+    [0xffffff, 'z', 1, -20, 6.5],
+    [BLUE, 'z', -1, 35, 5.5],
   ]
   CAR_SPEC.forEach(([color, axis, dir, start, speed]) => {
     const g = new THREE.Group()
     const body = new THREE.Mesh(new RoundedBoxGeometry(4.2, 1.0, 1.8, 2, 0.18), new THREE.MeshStandardMaterial({ color, roughness: 0.45, metalness: 0.2 }))
     body.position.y = 0.72
-    const cabin = new THREE.Mesh(new RoundedBoxGeometry(2.3, 0.8, 1.6, 2, 0.16), new THREE.MeshStandardMaterial({ color: 0x33414c, roughness: 0.2, metalness: 0.3 }))
+    const cabin = new THREE.Mesh(new RoundedBoxGeometry(2.3, 0.8, 1.6, 2, 0.16), new THREE.MeshStandardMaterial({ color: 0x4a5563, roughness: 0.2, metalness: 0.3 }))
     cabin.position.set(-0.25, 1.5, 0)
     body.castShadow = cabin.castShadow = true
     g.add(body, cabin)
@@ -689,11 +694,16 @@ export function mount(host: HTMLElement): TownHandle {
   const pinTip = new THREE.ConeGeometry(0.38, 0.9, 14)
   pinTip.rotateX(Math.PI)
   pinTip.translate(0, -0.55, 0)
+  const pinDot = new THREE.SphereGeometry(0.24, 14, 10)
+  const pinDotMat = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffffff, emissiveIntensity: 0.2 })
 
   function pin(x: number, y: number, z: number, place: Place): Pin {
     const mat = new THREE.MeshStandardMaterial({ color: SEAL, emissive: SEAL, emissiveIntensity: 0.4, roughness: 0.4 })
     const g = new THREE.Group()
-    g.add(new THREE.Mesh(pinGeo, mat), new THREE.Mesh(pinTip, mat))
+    /* 가운데 흰 점. 카메라 쪽 면에 박아 지도 앱의 핀처럼 읽히게 한다 */
+    const dot = new THREE.Mesh(pinDot, pinDotMat)
+    dot.position.copy(CAM_DIR).multiplyScalar(0.36)
+    g.add(new THREE.Mesh(pinGeo, mat), new THREE.Mesh(pinTip, mat), dot)
     g.position.set(x, y, z)
     g.traverse((o) => {
       if ((o as THREE.Mesh).isMesh) o.castShadow = true
@@ -709,7 +719,7 @@ export function mount(host: HTMLElement): TownHandle {
   ]
 
   /* 개월 수에 따라 어느 알림이 살아 있는가. 페이지 본문이 말하는 서비스와 같은 순서다.
-     - 행정복지센터: 부모급여(0–23개월). 끝나기 직전에는 마감 도장색
+     - 행정복지센터: 부모급여(0–23개월). 끝나기 직전에는 마감 빨강
      - 어린이집: 대기를 거는 무렵부터 유치원으로 넘어가기 전까지
      - 소아과: 접종·검진이 계속 온다 */
   function pinState(place: Place, m: number): { on: number; deadline: boolean } {
@@ -783,7 +793,7 @@ export function mount(host: HTMLElement): TownHandle {
     stroller.scale.setScalar(Math.max(0.0001, 1 - walking))
     backpack.visible = m >= 66
 
-    /* 알림 표식 색 — 부모급여가 끝나기 직전에는 도장 빨강 */
+    /* 알림 표식 색 — 부모급여가 끝나기 직전에는 경고 빨강 */
     for (const p of pins) {
       const st = pinState(p.place, m)
       const target = st.deadline ? stampColor : sealColor
@@ -858,7 +868,11 @@ export function mount(host: HTMLElement): TownHandle {
     if (shownMonth < 0) shownMonth = targetMonth
     const diff = targetMonth - shownMonth
     if (Math.abs(diff) > 0.002) {
-      shownMonth += diff * (1 - Math.exp(-dt * 4.5))
+      /* 24개월 → 72개월처럼 크게 건너뛸 때 1초 안에 네 해가 지나가면 계절이 번쩍거린다.
+         초당 24개월을 넘지 않게 막아 "해가 바뀌는" 속도로 보이게 한다. */
+      const step = diff * (1 - Math.exp(-dt * 4.5))
+      const cap = dt * 24
+      shownMonth += Math.max(-cap, Math.min(cap, step))
       applyMonth(shownMonth)
     } else if (shownMonth !== targetMonth) {
       shownMonth = targetMonth

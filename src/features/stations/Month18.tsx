@@ -14,7 +14,7 @@ export function Month18(): ReactNode {
     <section id="m18" data-month={18} data-open="" className="yr-station yr-station--open" aria-labelledby="m18-title">
       <div className="yr-shell">
         <div className="yr-panel" data-in="">
-          <p className="stamp yr-stamp">{monthLabel(18)}</p>
+          <p className="badge yr-month">{monthLabel(18)}</p>
           <h2 id="m18-title" className="display yr-h2">
             접종 날짜는
             <br />
@@ -41,7 +41,7 @@ export function Month18(): ReactNode {
             </div>
             <div className="yr-rows__row">
               <dt>
-                <span className="stamp" style={{ color: 'var(--stamp)' }}>
+                <span className="badge" style={{ color: 'var(--alert-deep)' }}>
                   민감정보
                 </span>
               </dt>

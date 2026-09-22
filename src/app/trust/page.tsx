@@ -55,16 +55,16 @@ export default function TrustPage(): ReactNode {
       />
 
       <Section label="수집" title="받는 것과 그 이유">
-        <ul className="space-y-px" style={{ backgroundColor: 'var(--rule)' }}>
+        <ul className="space-y-px" style={{ backgroundColor: 'var(--line)' }}>
           {COLLECTED.map((row) => (
-            <li key={row.group} className="p-6" style={{ backgroundColor: 'var(--paper)' }}>
+            <li key={row.group} className="p-6" style={{ backgroundColor: 'var(--bg)' }}>
               <div className="grid gap-4 md:grid-cols-[132px_1fr] md:gap-8">
                 <div>
                   <p className="text-[0.95rem]">{row.group}</p>
                   {row.sensitive && (
                     <span
-                      className="stamp mt-2.5 inline-block"
-                      style={{ color: 'var(--stamp)' }}
+                      className="badge mt-2.5 inline-block"
+                      style={{ color: 'var(--alert-deep)' }}
                     >
                       민감정보
                     </span>
@@ -74,7 +74,7 @@ export default function TrustPage(): ReactNode {
                   <p className="text-[0.95rem] leading-[1.75]">{row.items}</p>
                   <p
                     className="mt-2.5 text-[0.875rem] leading-[1.8]"
-                    style={{ color: 'var(--ink-soft)' }}
+                    style={{ color: 'var(--fg-soft)' }}
                   >
                     {row.why}
                   </p>
@@ -86,7 +86,7 @@ export default function TrustPage(): ReactNode {
 
         <p
           className="mt-7 max-w-2xl text-[0.9rem] leading-[1.85]"
-          style={{ color: 'var(--ink-soft)' }}
+          style={{ color: 'var(--fg-soft)' }}
         >
           목록에 없는 항목은 받지 않습니다. 쓰임이 없어진 항목은 지웁니다.
         </p>
@@ -99,14 +99,14 @@ export default function TrustPage(): ReactNode {
             화면이 그냥 막히는 게 아니라, <strong>어떤 동의가 필요한지</strong>를 함께 알려
             드립니다. 왜 막혔는지 모른 채 화면만 보게 되면 안 되기 때문입니다.
           </p>
-          <p className="mt-5 text-[1.0625rem] leading-[1.9]" style={{ color: 'var(--ink-soft)' }}>
+          <p className="mt-5 text-[1.0625rem] leading-[1.9]" style={{ color: 'var(--fg-soft)' }}>
             동의는 언제든 철회할 수 있고, 언제 무엇에 동의했는지 이력도 보실 수 있습니다.
           </p>
         </div>
       </Section>
 
       <Section label="권리" title="내 정보를 다루는 방법">
-        <ul className="divide-y" style={{ borderColor: 'var(--rule)' }}>
+        <ul className="divide-y" style={{ borderColor: 'var(--line)' }}>
           {[
             {
               what: '내려받기',
@@ -124,10 +124,10 @@ export default function TrustPage(): ReactNode {
             <li
               key={r.what}
               className="grid gap-2 border-t py-5 md:grid-cols-[132px_1fr] md:gap-8"
-              style={{ borderColor: 'var(--rule)' }}
+              style={{ borderColor: 'var(--line)' }}
             >
               <span className="text-[0.95rem]">{r.what}</span>
-              <span className="text-[0.9rem] leading-[1.8]" style={{ color: 'var(--ink-soft)' }}>
+              <span className="text-[0.9rem] leading-[1.8]" style={{ color: 'var(--fg-soft)' }}>
                 {r.how}
               </span>
             </li>
@@ -145,14 +145,14 @@ export default function TrustPage(): ReactNode {
               '성장 정보는 의학적 진단이 아닙니다.',
             ].map((line) => (
               <li key={line} className="flex gap-3.5 text-[1rem] leading-[1.8]">
-                <span aria-hidden="true" style={{ color: 'var(--stamp)' }}>
+                <span aria-hidden="true" style={{ color: 'var(--alert-deep)' }}>
                   —
                 </span>
                 <span>{line}</span>
               </li>
             ))}
           </ul>
-          <p className="mt-8 text-[0.9rem] leading-[1.85]" style={{ color: 'var(--ink-soft)' }}>
+          <p className="mt-8 text-[0.9rem] leading-[1.85]" style={{ color: 'var(--fg-soft)' }}>
             잘못된 기대는 그대로 분쟁이 됩니다. 그래서 약관에도 같은 내용을 넣었습니다.
           </p>
         </div>

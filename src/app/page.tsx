@@ -7,9 +7,6 @@ import { Month06 } from '@/features/stations/Month06'
 import { Month12 } from '@/features/stations/Month12'
 import { Month18 } from '@/features/stations/Month18'
 import { Month24 } from '@/features/stations/Month24'
-import { Month36 } from '@/features/stations/Month36'
-import { Month48 } from '@/features/stations/Month48'
-import { Month60 } from '@/features/stations/Month60'
 import '@/styles/grow.css'
 
 /*
@@ -31,9 +28,6 @@ export default function Home(): ReactNode {
       <Month12 />
       <Month18 />
       <Month24 />
-      <Month36 />
-      <Month48 />
-      <Month60 />
       <Close />
     </>
   )
