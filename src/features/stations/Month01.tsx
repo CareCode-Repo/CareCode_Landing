@@ -1,4 +1,5 @@
 import { ReactNode } from 'react'
+import AppScreenMock from '@/components/AppScreenMock'
 import { MEASURED_LABEL, SOURCES, formatCount } from '@/content/figures'
 import { Station, StationHead } from './Station'
 
@@ -51,6 +52,21 @@ export function Month01(): ReactNode {
             </span>
           </div>
         ))}
+      </div>
+
+      <div className="yr-with-phone">
+        <div>
+          <h3 className="yr-h3" style={{ marginTop: 0 }} data-in="">
+            앱에서는 이렇게 보입니다
+          </h3>
+          <p className="yr-body" data-in="">
+            아이를 등록하면 그 아이의 개월 수를 기준으로 무엇이 열려 있고 무엇이 닫히는지 계산합니다.
+            기한이 걸린 것만 첫 화면에 올라옵니다.
+          </p>
+        </div>
+        <div data-in="">
+          <AppScreenMock />
+        </div>
       </div>
 
       <h3 className="yr-h3" data-in="">
