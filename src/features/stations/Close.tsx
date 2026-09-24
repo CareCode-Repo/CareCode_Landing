@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { ReactNode } from 'react'
+import { StartCta, StoreLinks } from '@/components/StartCta'
 import { monthLabel } from '@/features/grow/stages'
 
 /*
@@ -62,6 +63,12 @@ export function Close(): ReactNode {
             </li>
           ))}
         </ul>
+
+        {/* 여섯 해를 다 읽은 사람에게 문을 열어 준다. 여기서 닫으면 읽기만 한 방문이 된다. */}
+        <div className="yr-close__start" data-in="">
+          <StartCta />
+          <StoreLinks />
+        </div>
 
         <p className="yr-fine yr-close__repo" data-in="">
           판단의 근거는 전부 문서로 남겨 두었습니다.{' '}

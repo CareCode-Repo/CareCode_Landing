@@ -3,7 +3,8 @@ import Link from 'next/link'
 import { ReactNode } from 'react'
 import Logo from '@/components/Logo'
 import SiteNav from '@/components/SiteNav'
-import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL } from '@/content/site'
+import { StartSection } from '@/components/StartCta'
+import { CONTACT_EMAIL, SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL } from '@/content/site'
 import { Shell } from '@/components/Page'
 import '@/styles/globals.css'
 
@@ -93,7 +94,22 @@ export default function RootLayout({ children }: { children: ReactNode }): React
               </nav>
             </div>
 
-            <p className="label mt-12">© 2026 CareCode</p>
+            {/* 읽기를 끝낸 자리에서도 시작할 수 있게 한다. */}
+            <div className="mt-12 border-t pt-10" style={{ borderColor: 'var(--line)' }}>
+              <p className="label">시작하기</p>
+              <div className="mt-4">
+                <StartSection />
+              </div>
+            </div>
+
+            <div className="mt-12 flex flex-wrap items-center justify-between gap-4">
+              <p className="label">© 2026 CareCode</p>
+              {CONTACT_EMAIL && (
+                <p className="text-[0.9rem]" style={{ color: 'var(--fg-soft)' }}>
+                  문의 <a href={`mailto:${CONTACT_EMAIL}`} style={{ color: 'var(--brand-deep)' }}>{CONTACT_EMAIL}</a>
+                </p>
+              )}
+            </div>
           </Shell>
         </footer>
       </body>

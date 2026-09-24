@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ReactNode, useState } from 'react'
 import Logo from '@/components/Logo'
+import { StartCta } from '@/components/StartCta'
 
 /** 순서가 아니라 분류라서 번호를 붙이지 않는다. */
 const TABS = [
@@ -56,6 +57,11 @@ export default function IntroNav(): ReactNode {
           </ul>
         </nav>
 
+        {/* 어느 설명 페이지를 읽고 있든 한 번에 시작할 수 있어야 한다. */}
+        <div className="hidden md:block yr-nav__cta">
+          <StartCta />
+        </div>
+
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
@@ -92,6 +98,9 @@ export default function IntroNav(): ReactNode {
                 </Link>
               </li>
             ))}
+            <li className="pt-3">
+              <StartCta />
+            </li>
           </ul>
         </nav>
       )}
