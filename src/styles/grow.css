@@ -873,3 +873,116 @@ body:has(.yr-sky) > footer {
   padding: 0 18px;
   font-size: 0.9375rem;
 }
+
+/* ============================================================
+   앱 화면 — 소개 사이트에서 제품을 한 번은 보여준다
+   ============================================================ */
+.yr-phone {
+  margin: 0;
+  max-width: 340px;
+}
+
+.yr-phone__frame {
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  padding: 16px 14px 20px;
+}
+
+.yr-phone__bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px 10px;
+}
+
+.yr-phone__title {
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.yr-phone__chips {
+  display: flex;
+  gap: 6px;
+  padding: 0 4px 14px;
+}
+
+.yr-phone__chip {
+  border-radius: 999px;
+  background: var(--gray-100);
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  color: var(--fg-soft);
+}
+
+.yr-phone__chip--child {
+  background: var(--brand-tint);
+  color: var(--brand-deep);
+  font-weight: 600;
+}
+
+.yr-phone__section {
+  padding: 0 4px 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.yr-phone__list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.yr-phone__list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 12px;
+  background: var(--bg);
+  padding: 12px;
+}
+
+.yr-phone__list b {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.yr-phone__list small {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.75rem;
+  color: var(--fg-soft);
+}
+
+.yr-phone__tag {
+  flex: none;
+  border-radius: 999px;
+  background: var(--brand-tint);
+  padding: 3px 8px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--brand-deep);
+}
+
+.yr-phone__tag--urgent {
+  background: color-mix(in srgb, var(--alert) 12%, transparent);
+  color: var(--alert-deep);
+}
+
+/* 1개월 구간: 간극 표 옆에 앱 화면을 나란히 */
+.yr-with-phone {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 340px);
+  gap: 40px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .yr-with-phone {
+    grid-template-columns: 1fr;
+  }
+}
