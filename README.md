@@ -175,3 +175,8 @@ PR 에서 사람이 볼 것은 하나입니다 — **숫자가 갑자기 크게 
 ## 스택
 
 Next.js 15 (App Router, 정적 출력) · React 19 · Tailwind CSS v4 · TypeScript · three.js (홈의 3D 동네, 지연 로드)
+
+## 라이선스
+
+이 프로젝트의 소스 코드는 **MIT 라이선스**를 따릅니다. Copyright (c) 2026 CareCode.
+전문은 [LICENSE](LICENSE) 파일에 있습니다.
